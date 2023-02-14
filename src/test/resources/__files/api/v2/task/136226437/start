@@ -1,0 +1,74 @@
+{
+  "id": 136226437,
+  "name": "861207014_way_1",
+  "created": "2022-09-15T18:50:39.354Z",
+  "modified": "2022-10-18T03:19:56.028Z",
+  "parent": 27887,
+  "instruction": "",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -108.4962538,
+      39.082404
+    ]
+  },
+  "geometries": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "id": "861207014_way_1",
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -108.4963169,
+              39.0824414
+            ],
+            [
+              -108.4961912,
+              39.0824419
+            ],
+            [
+              -108.4961907,
+              39.0823666
+            ],
+            [
+              -108.4963164,
+              39.0823661
+            ],
+            [
+              -108.4963169,
+              39.0824414
+            ]
+          ]
+        },
+        "properties": {
+          "type": "way",
+          "osmid": 861207014,
+          "message": "Polygon has self intersections.",
+          "check_date": "2022-06-15T08:34:10.831Z"
+        }
+      }
+    ]
+  },
+  "status": 6,
+  "mappedOn": "2022-10-18T03:19:56.028Z",
+  "completedTimeSpent": 923162,
+  "completedBy": 11197,
+  "review": {
+    "reviewStatus": 1,
+    "reviewRequestedBy": 11197,
+    "reviewedBy": 9724,
+    "reviewedAt": "2022-10-18T07:09:14.455Z",
+    "reviewStartedAt": "2022-10-18T07:08:52.469Z"
+  },
+  "priority": 0,
+  "changesetId": -1,
+  "errorTags": "",
+  "reviewStatus": 1,
+  "reviewRequestedBy": 11197,
+  "reviewedBy": 9724,
+  "reviewedAt": "2022-10-18T07:09:14.455Z",
+  "reviewStartedAt": "2022-10-18T07:08:52.469Z"
+}

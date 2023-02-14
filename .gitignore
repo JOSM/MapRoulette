@@ -1,0 +1,6 @@
+build
+javadoc
+lib
+target
+/test/
+/bin/

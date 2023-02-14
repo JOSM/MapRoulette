@@ -1,0 +1,52 @@
+{
+  "id": 147197178,
+  "name": "node/6318952236",
+  "created": "2023-02-08T01:55:42.561Z",
+  "modified": "2023-02-08T01:55:42.561Z",
+  "parent": 28410,
+  "instruction": "",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -120.342239,
+      47.463575
+    ]
+  },
+  "geometries": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:0"
+            }
+          },
+          "type": "Point",
+          "coordinates": [
+            -120.342239,
+            47.463575
+          ]
+        },
+        "properties": {
+          "building": "yes",
+          "addr:city": "Wenatchee",
+          "identifier": "6318952236000000",
+          "addr:street": "Chatham Hill Road",
+          "instructions": "1. Node 6318952236 has been tagged as a building indicating that it represents a building, but it is better to represent buildings with polygons or multipolygons. Please see if there is enough satellite imagery information to replace this node with a new polygon. If there is enough detail to draw this building as a polygon then add the polygon that represents the building and remove the building tag from this node or transfer the tags from this node to the new polygon, and then delete this node. See https://wiki.openstreetmap.org/wiki/Mapping_addresses_as_separate_nodes_or_by_adding_to_building_polygons.",
+          "addr:postcode": "98801",
+          "osmIdentifier": "node/6318952236",
+          "addr:housenumber": "321"
+        }
+      }
+    ]
+  },
+  "status": 0,
+  "review": {},
+  "priority": 2,
+  "changesetId": -1,
+  "errorTags": "",
+  "tags": []
+}

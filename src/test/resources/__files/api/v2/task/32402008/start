@@ -1,0 +1,41 @@
+{
+  "id": 32402008,
+  "name": "node/5936074953",
+  "created": "2019-10-28T22:14:49.789Z",
+  "modified": "2019-10-28T22:14:49.789Z",
+  "parent": 10078,
+  "instruction": "",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -88.0328095,
+      44.4538122
+    ]
+  },
+  "geometries": {
+    "features": [
+      {
+        "id": "node/5936074953",
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -88.0328095,
+            44.4538122
+          ]
+        },
+        "properties": {
+          "@id": "node/5936074953",
+          "osmid": "node/5936074953",
+          "highway": "crossing",
+          "crossing": "zebra"
+        }
+      }
+    ]
+  },
+  "status": 0,
+  "review": {},
+  "priority": 1,
+  "changesetId": -1,
+  "errorTags": ""
+}

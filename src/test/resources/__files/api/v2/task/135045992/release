@@ -1,0 +1,113 @@
+{
+  "id": 135045992,
+  "name": "way/131190351",
+  "created": "2022-08-06T15:23:36.531Z",
+  "modified": "2023-01-24T16:55:27.577Z",
+  "parent": 24092,
+  "instruction": "",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -119.104608317353,
+      36.0819446365856
+    ]
+  },
+  "geometries": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -119.1030377,
+                36.0844331
+              ],
+              [
+                -119.102974,
+                36.0802666
+              ],
+              [
+                -119.1050483,
+                36.0802173
+              ],
+              [
+                -119.1050483,
+                36.0802185
+              ],
+              [
+                -119.1065132,
+                36.08016
+              ],
+              [
+                -119.1063931,
+                36.0832158
+              ],
+              [
+                -119.104985,
+                36.0832278
+              ],
+              [
+                -119.1049631,
+                36.0834019
+              ],
+              [
+                -119.1040136,
+                36.0833777
+              ],
+              [
+                -119.1040012,
+                36.0844282
+              ],
+              [
+                -119.1030377,
+                36.0844331
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "@id": "way/131190351",
+          "acres": "28.9408234929",
+          "source": "http://www.consrv.ca.gov/dlrp/fmmp/products/Pages/DownloadGISdata.aspx",
+          "landuse": "farmland",
+          "addr:county": "Tulare",
+          "attribution": "Farmland Mapping and Monitoring Program",
+          "description": "farmland of local importance",
+          "FMMP_modified": "yes",
+          "FMMP_reviewed": "no"
+        }
+      }
+    ]
+  },
+  "cooperativeWork": {
+    "meta": {
+      "type": 1,
+      "version": 2
+    },
+    "operations": [
+      {
+        "data": {
+          "id": "way/131190351",
+          "operations": [
+            {
+              "data": {
+                "landuse": "farmland",
+                "FMMP_modified": "yes"
+              },
+              "operation": "setTags"
+            }
+          ]
+        },
+        "operationType": "modifyElement"
+      }
+    ]
+  },
+  "status": 1,
+  "review": {},
+  "priority": 0,
+  "changesetId": -1,
+  "errorTags": ""
+}

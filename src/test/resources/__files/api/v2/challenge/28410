@@ -1,0 +1,193 @@
+{
+  "id": 28410,
+  "name": "USA - LoneBuildingNodeCheck",
+  "created": "2022-07-29T15:23:02.258Z",
+  "modified": "2023-02-08T18:22:12.174Z",
+  "description": "This challenge was created using the LoneBuildingNodeCheck from Atlas Checks. It identifies nodes that are tagged as `buildings` that are located outside of any enclosed way that is also is tagged as a `building`.",
+  "deleted": false,
+  "infoLink": "",
+  "owner": 251140,
+  "parent": 42884,
+  "featured": false,
+  "requiresLocal": false,
+  "blurb": "Fix level crossing railway/highway intersections",
+  "enabled": true,
+  "difficulty": 2,
+  "cooperativeType": 0,
+  "instruction": "{{instructions}}",
+  "popularity": 1668152027,
+  "checkinComment": "#AtlasChecks #LoneBuildingNodeCheck #maproulette",
+  "checkinSource": "",
+  "virtualParents": [
+    49150
+  ],
+  "remoteGeoJson": "https://daylight-map-distribution.s3.us-west-1.amazonaws.com/mr/atlas_checks/USA_LoneBuildingNodeCheck.json",
+  "overpassTargetType": "",
+  "overpassQL": "",
+  "lowPriorityRule": {},
+  "defaultPriority": 2,
+  "highPriorityRule": {
+    "condition": "OR",
+    "rules": [
+      {
+        "value": "location.-98.805051,29.2562939,-98.023766,29.777227",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-98.01332,29.942058,-97.521823,30.742355",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-97.648282,32.322777,-96.313105,33.2448879",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-95.872908,29.3667169,-94.802492,30.2584199",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-88.655707,41.326194,-86.978681,42.4935458",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-85.05069,33.1720879,-83.680793,34.3859799",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-83.797195,41.979053,-82.515768,42.890952",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-81.5228,28.15907,-81.163088,28.421315",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-81.90941,28.2761849,-81.092815,28.8409589",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-80.528196,25.4037869,-80.031362,26.999043",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-77.821925,38.402606,-76.67486,39.417607",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-76.123615,39.4926229,-74.657158,40.436757",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-74.948673,39.5083757,-72.269961,41.5412229",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-71.821553,41.774877,-70.591469,43.0633909",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-122.64969,37.341,-121.88927,38.138779",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-122.74212,47.007936,-121.87232,48.035194",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-122.19132,37.121665,-121.70998,37.4691679",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-118.87157,33.5642161,-117.48644,34.337914",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-117.45648,32.539866,-116.69485,33.41444",
+        "type": "bounds",
+        "operator": "contains"
+      },
+      {
+        "value": "location.-112.46033,33.089419,-111.42554,33.885028",
+        "type": "bounds",
+        "operator": "contains"
+      }
+    ]
+  },
+  "mediumPriorityRule": {},
+  "defaultZoom": 13,
+  "maxZoom": 19,
+  "isArchived": false,
+  "defaultBasemapId": "",
+  "minZoom": 1,
+  "osmIdProperty": "osmIdentifier",
+  "updateTasks": false,
+  "customBasemap": "",
+  "defaultBasemap": -1,
+  "limitTags": false,
+  "limitReviewTags": false,
+  "exportableProperties": "",
+  "presets": [],
+  "taskStyles": [],
+  "taskBundleIdProperty": "",
+  "status": 3,
+  "statusMessage": "Unexpected character ('<' (code 60)): expected a valid value (JSON String, Number, Array, Object or token 'null', 'true' or 'false')\n at [Source: (String)\"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>AccessDenied</Code><Message>Access Denied</Message><RequestId>4EM8TJ6JQFYC3P0M</RequestId><HostId>oefEZSG+4eQq9J3dVZAgI3ApUAGWCDuI7DM8zw2H9oENIbvQf6tagxxiaMczAbuyxSxqpPhxv3w=</HostId></Error>\"; line: 1, column: 2]",
+  "lastTaskRefresh": "2023-02-08T01:56:13.292Z",
+  "dataOriginDate": "2022-07-29T15:23:02.258Z",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -97.2306833836753,
+      38.7458714758376
+    ]
+  },
+  "bounding": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -177.386386566306,
+          18.447032153503
+        ],
+        [
+          -177.386386566306,
+          62.3841478401836
+        ],
+        [
+          -66.0659786336943,
+          62.3841478401836
+        ],
+        [
+          -66.0659786336943,
+          18.447032153503
+        ],
+        [
+          -177.386386566306,
+          18.447032153503
+        ]
+      ]
+    ]
+  },
+  "completionPercentage": 0,
+  "tasksRemaining": 39978,
+  "tags": [
+    ""
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "id": 17720,
+  "name": "convert old farm tag to new version - world old",
+  "created": "2021-03-19T10:49:41.502Z",
+  "modified": "2021-11-03T20:10:01.121Z",
+  "description": "In this challenge we will convert the old \"landuse=farm\" tag to the new \"landuse=farmland\" or \"landuse=farmyard\" tag.\n\nOriginally created 19 March 2021\nTasks updated 30 October 2021",
+  "deleted": true,
+  "infoLink": "",
+  "owner": 12424494,
+  "parent": 43125,
+  "featured": false,
+  "requiresLocal": false,
+  "blurb": "",
+  "enabled": false,
+  "difficulty": 2,
+  "cooperativeType": 0,
+  "instruction": "Scroll down to the tags of the farm. When you find \"landuse=farm\" delete it, and replace it with \"landuse=farmland\" if it is a field or \"landuse=farmyard\" if it a collection of farm buildings.",
+  "popularity": 1635678166,
+  "checkinComment": "change landuse=farm to landuse=farmland #maproulette",
+  "checkinSource": "",
+  "virtualParents": [],
+  "remoteGeoJson": "",
+  "overpassTargetType": "way",
+  "overpassQL": "way[\"landuse\"=\"farm\"];\nout geom;",
+  "lowPriorityRule": {},
+  "defaultPriority": 1,
+  "highPriorityRule": {
+    "condition": "AND",
+    "rules": [
+      {
+        "value": "location.-73.58642578125001,41.4509614012039,-69.22485351562501,42.85180609584705",
+        "type": "bounds",
+        "operator": "contains"
+      }
+    ]
+  },
+  "mediumPriorityRule": {},
+  "defaultZoom": 13,
+  "maxZoom": 19,
+  "isArchived": false,
+  "defaultBasemapId": "",
+  "minZoom": 1,
+  "osmIdProperty": "",
+  "updateTasks": false,
+  "customBasemap": "",
+  "defaultBasemap": -1,
+  "limitTags": false,
+  "limitReviewTags": false,
+  "exportableProperties": "",
+  "presets": [],
+  "taskStyles": [],
+  "taskBundleIdProperty": "",
+  "status": 3,
+  "statusMessage": "Request timeout to overpass-api.de/178.63.48.217:80 after 120000 ms",
+  "lastTaskRefresh": "2021-11-01T23:32:04.819Z",
+  "dataOriginDate": "2021-11-01T23:32:04.819Z",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -91.7168892855458,
+      38.2779854501449
+    ]
+  },
+  "bounding": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -124.081885474556,
+          -37.7707340805065
+        ],
+        [
+          -124.081885474556,
+          52.4754308959224
+        ],
+        [
+          137.195023103271,
+          52.4754308959224
+        ],
+        [
+          137.195023103271,
+          -37.7707340805065
+        ],
+        [
+          -124.081885474556,
+          -37.7707340805065
+        ]
+      ]
+    ]
+  },
+  "completionPercentage": 14,
+  "tasksRemaining": 13114,
+  "tags": [
+    "landuse",
+    "boundary",
+    ""
+  ]
+}

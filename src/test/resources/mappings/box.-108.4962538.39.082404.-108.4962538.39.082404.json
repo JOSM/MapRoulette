@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "PUT",
+        "url": "/api/v2/tasks/box/-108.4962538/39.082404/-108.4962538/39.082404"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "api/v2/tasks/box/-108.4962538/39.082404/-108.4962538/39.082404",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

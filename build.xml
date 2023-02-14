@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="MapRoulette" default="dist" basedir=".">
+    <property name="plugin.src.dir" value="src/main/java"/>
+    <property name="plugin.resources.dir" value="src/main/resources"/>
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="18464"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Taylor Smock"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.maproulette.MapRoulette"/>
+    <property name="plugin.description" value="MapRoulette Tasks in JOSM"/>
+    <property name="plugin.icon"
+              value="https://github.com/maproulette/maproulette3/raw/2a6a16eeb05e14c164751b4bf47fe2b343a820bc/src/static/images/user_no_image.png"/>
+    <property name="plugin.link" value="https://maproulette.org"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+    <property name="plugin.minimum.java.version" value="17"/>
+    <property name="java.lang.version" value="17"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+    <target name="pre-compile" depends="fetch_dependencies">
+        <!-- include fetch_dependencies task -->
+    </target>
+</project>

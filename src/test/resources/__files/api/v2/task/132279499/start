@@ -1,0 +1,50 @@
+{
+  "id": 132279499,
+  "name": "9494185766000000",
+  "created": "2022-06-29T16:13:00.100Z",
+  "modified": "2022-06-29T16:13:00.105Z",
+  "parent": 27905,
+  "instruction": "1. Node 9494185766 has been tagged as a building but it appears to be an address. Please remove the building=< * > tag.",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -108.5704318,
+      39.0745811
+    ]
+  },
+  "geometries": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -108.5704318,
+            39.0745811
+          ]
+        },
+        "properties": {
+          "width": "2",
+          "building": "window",
+          "itemType": "Point",
+          "flag:check": "United States - EnclosedBuildingNodeCheck",
+          "identifier": "9494185766000000",
+          "osmIdentifier": "9494185766",
+          "flag:generator": "Atlas Checks",
+          "last_edit_time": "1644459162000",
+          "iso_country_code": "USA",
+          "last_edit_user_id": "2078753",
+          "last_edit_version": "1",
+          "last_edit_changeset": "117224854",
+          "last_edit_user_name": "vorpalblade"
+        }
+      }
+    ]
+  },
+  "status": 0,
+  "review": {},
+  "priority": 2,
+  "changesetId": -1,
+  "errorTags": ""
+}

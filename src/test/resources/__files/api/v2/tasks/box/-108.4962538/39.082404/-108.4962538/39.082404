@@ -1,0 +1,40 @@
+[
+  {
+    "id": 136226437,
+    "owner": -1,
+    "ownerName": "",
+    "title": "861207014_way_1",
+    "parentId": 27887,
+    "parentName": "United States | Polygon has self intersection",
+    "point": {
+      "lat": 39.082404,
+      "lng": -108.4962538
+    },
+    "bounding": "",
+    "blurb": "",
+    "modified": "2023-01-31T19:28:24.909Z",
+    "difficulty": -1,
+    "type": 2,
+    "status": 6,
+    "mappedOn": "2022-10-18T03:19:56.028Z",
+    "completedTimeSpent": 923162,
+    "completedBy": {
+      "username": "Photo_MC",
+      "id": 11197
+    },
+    "pointReview": {
+      "reviewStatus": 1,
+      "reviewRequestedBy": {
+        "username": "Photo_MC",
+        "id": 11197
+      },
+      "reviewedBy": {
+        "username": "Jenn_Bh",
+        "id": 9724
+      },
+      "reviewedAt": "2022-10-18T07:09:14.455Z",
+      "reviewStartedAt": "2022-10-18T07:08:52.469Z"
+    },
+    "priority": 0
+  }
+]

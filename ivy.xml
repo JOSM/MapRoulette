@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License: GPL. For details, see LICENSE file. -->
+<ivy-module version="2.0">
+    <info organisation="org.openstreetmap.josm.plugins" module="maproulette"/>
+    <dependencies>
+        <dependency org="org.commonmark" name="commonmark" rev="0.21.0"/>
+        <!-- Test dependency for commonmark -->
+        <exclude org="org.commonmark" module="commonmark-test-util"/>
+        <exclude org="org.openjdk.jmh"/>
+        <exclude org="junit"/>
+    </dependencies>
+</ivy-module>

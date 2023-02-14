@@ -1,0 +1,6 @@
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors"
+     attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+    <preferences>
+        <preference k="maproulette_apikey_v2" v="1414|someRandomKey"/>
+    </preferences>
+</osm>

@@ -1,0 +1,53 @@
+{
+  "id": 134808786,
+  "name": "node/-103005",
+  "created": "2022-08-04T15:44:15.335Z",
+  "modified": "2022-08-04T15:44:15.335Z",
+  "parent": 28467,
+  "instruction": "",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -82.9782727,
+      43.3719671
+    ]
+  },
+  "geometries": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -82.9782727,
+            43.3719671
+          ]
+        },
+        "properties": {
+          "@id": "node/-103005",
+          "name": "Duff Creek",
+          "waterway": "stream",
+          "gnis:feature_id": "624965"
+        }
+      }
+    ]
+  },
+  "cooperativeWork": {
+    "file": {
+      "type": "xml",
+      "format": "osc",
+      "content": "PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPG9zbUNoYW5nZSB2ZXJzaW9uPScwLjYnPgogIDxjcmVhdGU+CiAgPG5vZGUgaWQ9Ii0xMDMwMDUiIGxhdD0iNDMuMzcxOTY3MSIgbG9uPSItODIuOTc4MjcyNyI+DQogICAgPHRhZyBrPSJnbmlzOmZlYXR1cmVfaWQiIHY9IjYyNDk2NSIvPg0KICAgIDx0YWcgaz0ibmFtZSIgdj0iRHVmZiBDcmVlayIvPg0KICAgIDx0YWcgaz0id2F0ZXJ3YXkiIHY9InN0cmVhbSIvPg0KICA8L25vZGU+CiAgPC9jcmVhdGU+Cjwvb3NtQ2hhbmdlPg==",
+      "encoding": "base64"
+    },
+    "meta": {
+      "type": 2,
+      "version": 2
+    }
+  },
+  "status": 0,
+  "review": {},
+  "priority": 0,
+  "changesetId": -1,
+  "errorTags": ""
+}
