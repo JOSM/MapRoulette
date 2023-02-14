@@ -1,12 +1,59 @@
 name: Release
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - v.**
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
 
 jobs:
   call-workflow:
     uses: JOSM/JOSMPluginAction/.github/workflows/ant.yml@v1
     with:
       josm-revision: "r18464"
+      java-version: 17
 
+  createrelease:
+    needs: call-workflow
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set revision env variable
+        id: create_revision
+        run: |
+          if [[ ! -z "${{ inputs.tag }}" ]]; then
+            revision="${{ inputs.tag }}"
+          else
+            revision="${{ github.ref_name }}"
+          fi
+          echo "revision=$revision" >> $GITHUB_OUTPUT
+      - name: Get build
+        id: cache-plugin-build
+        uses: actions/cache@v3.0.0
+        with:
+          key: ${{ github.event.repository.name }}-${{ github.sha }}
+          path: |
+            josm/dist/${{ github.event.repository.name }}.jar
+            josm/dist/${{ github.event.repository.name }}-javadoc.jar
+            josm/dist/${{ github.event.repository.name }}-sources.jar
+      - name: Generate update site
+        id: create_update_site
+        run: |
+          ls -R .
+          jarname="${{ github.event.repository.name }}.jar"
+          jarurl="https://github.com/${{ github.repository }}/releases/download/${{ steps.create_revision.outputs.revision }}/${jarname}"
+          echo "${jarname};$jarurl" > updatesite
+          unzip -p "josm/dist/${jarname}" META-INF/MANIFEST.MF | sed 's/^/\t/' >> updatesite
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.create_revision.outputs.revision }}
+          files: |
+            josm/dist/${{ github.event.repository.name }}.jar
+            josm/dist/${{ github.event.repository.name }}-javadoc.jar
+            josm/dist/${{ github.event.repository.name }}-sources.jar
+            updatesite
