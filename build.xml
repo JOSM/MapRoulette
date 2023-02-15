@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="MapRoulette" default="dist" basedir=".">
     <property name="plugin.src.dir" value="src/main/java"/>
+    <property name="plugin.test.dir" location="src/test"/>
     <property name="plugin.resources.dir" value="src/main/resources"/>
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>

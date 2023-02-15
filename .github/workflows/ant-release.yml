@@ -31,11 +31,12 @@ jobs:
             revision="${{ github.ref_name }}"
           fi
           echo "revision=$revision" >> $GITHUB_OUTPUT
+          echo "revision_number=${revision#v}" >> $GITHUB_OUTPUT
       - name: Get build
         id: cache-plugin-build
         uses: actions/cache@v3.0.0
         with:
-          key: ${{ github.event.repository.name }}-${{ github.sha }}
+          key: ${{ github.event.repository.name }}-${{ github.sha }}-${{ steps.create_revision.outputs.revision_number }}
           path: |
             josm/dist/${{ github.event.repository.name }}.jar
             josm/dist/${{ github.event.repository.name }}-javadoc.jar
@@ -49,11 +50,18 @@ jobs:
           echo "${jarname};$jarurl" > updatesite
           unzip -p "josm/dist/${jarname}" META-INF/MANIFEST.MF | sed 's/^/\t/' >> updatesite
       - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.create_revision.outputs.revision }}
-          files: |
-            josm/dist/${{ github.event.repository.name }}.jar
-            josm/dist/${{ github.event.repository.name }}-javadoc.jar
-            josm/dist/${{ github.event.repository.name }}-sources.jar
-            updatesite
+        run: |
+          target="${{ steps.create_revision.outputs.revision }}"
+          if [ -z "$(gh --repo ${{ github.repository }} release view \"${target}\")" ]; then
+            gh release --repo ${{ github.repository }} create "${target}" \
+              --title "${target}" \
+              --latest \
+              --generate-notes
+          fi
+          gh release --repo ${{ github.repository }} upload --clobber "${target}" \
+            "josm/dist/${{ github.event.repository.name }}.jar" \
+            "josm/dist/${{ github.event.repository.name }}-javadoc.jar" \
+            "josm/dist/${{ github.event.repository.name }}-sources.jar" \
+            "updatesite"
+        env:
+          GH_TOKEN: ${{ github.token }}
