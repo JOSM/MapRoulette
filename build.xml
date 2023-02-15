@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.maproulette.MapRoulette"/>
     <property name="plugin.description" value="MapRoulette Tasks in JOSM"/>
     <property name="plugin.icon" value="images/dialogs/user_no_image.png"/>
-    <property name="plugin.link" value="https://maproulette.org"/>
+    <property name="plugin.link" value="https://github.com/JOSM/MapRoulette"/>
     <property name="plugin.minimum.java.version" value="17"/>
     <property name="java.lang.version" value="17"/>
     <property name="plugin.canloadatruntime" value="true"/>
