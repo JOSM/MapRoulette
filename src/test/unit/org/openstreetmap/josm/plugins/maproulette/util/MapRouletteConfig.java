@@ -35,7 +35,7 @@ import org.openstreetmap.josm.tools.JosmRuntimeException;
 public @interface MapRouletteConfig {
     class Extension extends WireMockExtension {
         public Extension() {
-            super(extensionOptions().options(options().usingFilesUnderDirectory("src/test/resources")
+            super(extensionOptions().options(options().dynamicPort().usingFilesUnderDirectory("src/test/resources")
                     .extensions(new MapRouletteExtension())));
         }
 
