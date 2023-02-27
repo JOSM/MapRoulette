@@ -27,10 +27,12 @@ import org.openstreetmap.josm.gui.preferences.server.ServerAccessPreference;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressTaskId;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
 import org.openstreetmap.josm.plugins.maproulette.api.UnauthorizedException;
 import org.openstreetmap.josm.plugins.maproulette.api.model.TaskClusteredPoint;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.TaskCache;
+import org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig;
 import org.openstreetmap.josm.plugins.maproulette.gui.layer.MapRouletteClusteredPointLayer;
 
 /**
@@ -84,7 +86,7 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
         }
 
         @Override
-        protected void realRun() throws IOException {
+        protected void realRun() throws IOException, OsmTransferException {
             try {
                 tasks = TaskAPI.box(bounds.getMinLon(), bounds.getMinLat(), bounds.getMaxLon(), bounds.getMaxLat(),
                         1_000, 0, true, null, null, false, true, true);
@@ -105,7 +107,15 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
                         p.setVisible(true);
                     }
                 });
-                throw new IOException(unauthorizedException);
+                // This is specifically so that user's don't get a bug report message
+                final var transferException = new OsmTransferException(unauthorizedException);
+                transferException.setUrl(MapRouletteConfig.getBaseUrl());
+                throw transferException;
+            } catch (IOException e) {
+                // This is specifically so that user's don't get a bug report message
+                final var transferException = new OsmTransferException(e);
+                transferException.setUrl(MapRouletteConfig.getBaseUrl());
+                throw transferException;
             }
         }
 
