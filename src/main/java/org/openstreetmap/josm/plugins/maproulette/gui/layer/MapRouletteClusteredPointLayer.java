@@ -35,6 +35,8 @@ import org.openstreetmap.josm.data.osm.QuadBuckets;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.osm.visitor.paint.StyledMapRenderer;
+import org.openstreetmap.josm.data.preferences.CachingProperty;
+import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
@@ -62,6 +64,10 @@ import org.openstreetmap.josm.tools.ListenerList;
  * A layer for showing task locations
  */
 public class MapRouletteClusteredPointLayer extends Layer implements MouseListener {
+    /** The number of clicks for deselection */
+    private static final CachingProperty<Integer> DESELECT_CLICK_COUNT = new IntegerProperty(
+            "maproulette.task.deselect.mouse.click.count", 3).cached();
+
     /**
      * The style source, mostly used for preferences
      */
@@ -292,7 +298,11 @@ public class MapRouletteClusteredPointLayer extends Layer implements MouseListen
                 }
             }
         }
-        this.setSelected(add);
+        if (add.isEmpty() && e.getClickCount() >= DESELECT_CLICK_COUNT.get()) {
+            this.setSelected(Collections.emptyList());
+        } else if (!add.isEmpty()) {
+            this.setSelected(add);
+        }
         this.invalidate();
     }
 
