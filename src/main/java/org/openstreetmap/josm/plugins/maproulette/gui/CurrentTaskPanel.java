@@ -39,6 +39,7 @@ import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
@@ -417,22 +418,37 @@ public final class CurrentTaskPanel extends ToggleDialog {
         private void handleTask(Task task) {
             // TODO put extended dialog here, ask for comment/tags/null -- don't forget to use the bulk operation methods
             if (task != null) {
-                ModifiedObjects.addModifiedTask(new ModifiedTask(task, this.status, null, null, null,
-                        getSelections(this.currentDocumentProvider.get())));
-            }
-            if (task != null && task.isCooperativeWorkOsmChange() && this.status == TaskStatus.FIXED) {
-                final var command = new ApplyCooperativeChange(
-                        Objects.requireNonNull(task.cooperativeWorkAsOsmChange()))
-                                .generateCommand(OsmDataManager.getInstance().getEditDataSet());
-                if (command != null) {
-                    command.executeCommand();
-                    if (!command.getParticipatingPrimitives().isEmpty()) {
-                        UndoRedoHandler.getInstance().add(command, false);
+                final var modifiedTask = new ModifiedTask(task, this.status, null, null, null,
+                        getSelections(this.currentDocumentProvider.get()));
+                ModifiedObjects.addModifiedTask(modifiedTask);
+                if (task.isCooperativeWorkOsmChange() && this.status == TaskStatus.FIXED) {
+                    final var command = new ApplyCooperativeChange(
+                            Objects.requireNonNull(task.cooperativeWorkAsOsmChange()))
+                                    .generateCommand(OsmDataManager.getInstance().getEditDataSet());
+                    if (command != null) {
+                        command.executeCommand();
+                        if (!command.getParticipatingPrimitives().isEmpty()) {
+                            UndoRedoHandler.getInstance().add(command, false);
+                        }
+                    }
+                } else if (task.isCooperativeWorkOsc() && this.status == TaskStatus.FIXED) {
+                    final var message = tr("Apply OSC directly to the edit layer?");
+                    final var options = new String[] { tr("Apply"), tr("Show"), tr("Cancel") };
+                    final var option = ConditionalOptionPaneUtil.showOptionDialog("maproulette.task.apply_osc",
+                            MainApplication.getMainFrame(), message, message, JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.YES_OPTION, options, options[0]);
+                    final var osc = Objects.requireNonNull(task.cooperativeWorkAsOsc());
+                    if (option == 0) {
+                        UndoRedoHandler.getInstance()
+                                .add(new ApplyOscChange(OsmDataManager.getInstance().getEditDataSet(), osc.a));
+                    } else if (option == 1) {
+                        final var layer = new OsmDataLayer(osc.a, task.name(), null);
+                        MainApplication.getLayerManager().addLayer(layer);
+                    } else {
+                        ModifiedObjects.removeModifiedTask(modifiedTask);
+                        return;
                     }
                 }
-            } else if (task != null && task.isCooperativeWorkOsc() && this.status == TaskStatus.FIXED) {
-                UndoRedoHandler.getInstance().add(new ApplyOscChange(OsmDataManager.getInstance().getEditDataSet(),
-                        Objects.requireNonNull(task.cooperativeWorkAsOsc()).a));
             }
             Optional.ofNullable(MainApplication.getMap().getToggleDialog(CurrentTaskPanel.class))
                     .ifPresent(p -> p.refreshModel(task));
