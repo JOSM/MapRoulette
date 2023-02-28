@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.gui;
 
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.ChallengeCache;
+import org.openstreetmap.josm.plugins.maproulette.markdown.SelectParser;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -73,8 +75,9 @@ public final class MRGuiHelper {
         matcher.appendTail(builder);
 
         // Instructions can be markdown, so we want to convert it to html
-        return "<html>" + HtmlRenderer.builder().build().render(Parser.builder().build().parse(builder.toString()))
-                + "</html>";
+        final var selectParser = Collections.singletonList(new SelectParser());
+        final var node = Parser.builder().extensions(selectParser).build().parse(builder.toString());
+        return "<html>" + HtmlRenderer.builder().extensions(selectParser).build().render(node) + "</html>";
     }
 
     /**
