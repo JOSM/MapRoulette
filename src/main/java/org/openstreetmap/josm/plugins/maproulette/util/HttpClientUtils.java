@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.tools.HttpClient;
@@ -92,8 +93,23 @@ public final class HttpClientUtils {
      * @return The client to use
      */
     public static HttpClient put(String url, Map<String, String> queryParameters) {
-        var client = HttpClient.create(safeUrl(url, Collections.emptyMap()), "PUT");
-        client.setRequestBody(query(queryParameters).substring(1).getBytes(StandardCharsets.UTF_8));
+        var client = put(url, Collections.emptyMap(),
+                query(queryParameters).substring(1).getBytes(StandardCharsets.UTF_8));
+        client.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        return client;
+    }
+
+    /**
+     * Put data
+     *
+     * @param url             The url to PUT
+     * @param queryParameters The query parameters
+     * @param body The body to use
+     * @return The client to use
+     */
+    public static HttpClient put(String url, Map<String, String> queryParameters, byte[] body) {
+        var client = HttpClient.create(safeUrl(url, queryParameters), "PUT");
+        client.setRequestBody(Objects.requireNonNullElse(body, new byte[0]));
         sign(client);
         return client;
     }

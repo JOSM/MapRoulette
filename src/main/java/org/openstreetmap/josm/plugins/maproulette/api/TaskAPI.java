@@ -6,9 +6,13 @@ import static org.openstreetmap.josm.plugins.maproulette.util.HttpClientUtils.pu
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.json.Json;
+import javax.swing.text.html.Option;
 
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.ClusteredPoint;
@@ -186,10 +190,11 @@ public final class TaskAPI {
      * @param comment       The comment to use
      * @param tags          The tags to use
      * @param requestReview Request review (or not), overrides user settings
+     * @param completionResponses The completion responses
      * @return {@code true} if the task update was successful
      */
-    public static boolean updateStatus(long task, TaskStatus status, String comment, String tags,
-            Boolean requestReview) {
+    public static boolean updateStatus(long task, TaskStatus status, String comment, String tags, Boolean requestReview,
+            Map<String, Option> completionResponses) {
         Map<String, String> query = new TreeMap<>();
         if (comment != null && !comment.isBlank()) {
             query.put("comment", comment);
@@ -200,8 +205,18 @@ public final class TaskAPI {
         if (requestReview != null) {
             query.put("requestReview", requestReview.toString());
         }
-
-        final var client = put(getBaseUrl() + TASK + "/" + task + "/" + status.ordinal(), query);
+        final byte[] body;
+        if (completionResponses != null) {
+            var jsonBuilder = Json.createObjectBuilder();
+            for (Map.Entry<String, Option> entry : completionResponses.entrySet()) {
+                jsonBuilder.add(entry.getKey(), entry.getValue().getValue());
+            }
+            body = jsonBuilder.build().toString().getBytes(StandardCharsets.UTF_8);
+        } else {
+            body = null;
+        }
+        final var client = put(getBaseUrl() + TASK + "/" + task + "/" + status.ordinal(), query, body);
+        client.setHeader("content-type", "text/json");
         try {
             final var response = client.connect();
             final var content = response.fetchContent();

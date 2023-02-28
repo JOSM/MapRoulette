@@ -11,18 +11,25 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import javax.swing.Action;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.Option;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -44,6 +51,7 @@ import org.openstreetmap.josm.plugins.maproulette.gui.preferences.MapRoulettePre
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * A panel for currently locked tasks
@@ -89,10 +97,14 @@ public final class CurrentTaskPanel extends ToggleDialog {
                 200, false, MapRoulettePreferences.class, false);
 
         final Supplier<Task> supplier = () -> this.task;
-        final var newActions = new InnerAction[] { new TaskStatusAction(TaskStatus.FALSE_POSITIVE, supplier),
-                new TaskStatusAction(TaskStatus.TOO_HARD, supplier), new TaskStatusAction(TaskStatus.FIXED, supplier),
-                new TaskStatusAction(TaskStatus.ALREADY_FIXED, supplier),
-                new TaskStatusAction(TaskStatus.SKIPPED, supplier), new SelectOsmPrimitives(supplier) };
+        final Supplier<HTMLDocument> docSupplier = () -> (HTMLDocument) this.instructionPane.getEditorPane()
+                .getDocument();
+        final var newActions = new InnerAction[] {
+                new TaskStatusAction(TaskStatus.FALSE_POSITIVE, supplier, docSupplier),
+                new TaskStatusAction(TaskStatus.TOO_HARD, supplier, docSupplier),
+                new TaskStatusAction(TaskStatus.FIXED, supplier, docSupplier),
+                new TaskStatusAction(TaskStatus.ALREADY_FIXED, supplier, docSupplier),
+                new TaskStatusAction(TaskStatus.SKIPPED, supplier, docSupplier), new SelectOsmPrimitives(supplier) };
 
         final var sideButtons = new ArrayList<SideButton>();
         sideButtons.add(new SideButton(newActions[0])); // False positive
@@ -131,6 +143,24 @@ public final class CurrentTaskPanel extends ToggleDialog {
      * @param task The task to show
      */
     public void refreshModel(final Task task) {
+        if (this.task != null) {
+            final var selectedResponses = getSelections(
+                    (HTMLDocument) this.instructionPane.getEditorPane().getDocument());
+            if (!selectedResponses.isEmpty()) {
+                final var modifiedTask = ModifiedObjects.getModifiedTask(this.task.id());
+                final ModifiedTask newModifiedTask;
+                if (modifiedTask == null) {
+                    newModifiedTask = new ModifiedTask(this.task, this.task.status(), null, null, null,
+                            selectedResponses);
+                } else {
+                    newModifiedTask = new ModifiedTask(modifiedTask.task(), modifiedTask.status(),
+                            modifiedTask.comment(), modifiedTask.tags(), modifiedTask.reviewRequested(),
+                            selectedResponses);
+                    ModifiedObjects.removeModifiedTask(modifiedTask);
+                }
+                ModifiedObjects.addModifiedTask(newModifiedTask);
+            }
+        }
         this.task = task;
         if ((task == null && this.isVisible()
                 && Config.getPref().getBoolean("maproulette.current_task_panel.autohide", false))
@@ -155,6 +185,7 @@ public final class CurrentTaskPanel extends ToggleDialog {
         this.idLabel.setText(tr("ID: {0}", currentTask.id()));
 
         this.instructionPane.setText(MRGuiHelper.getInstructionText(currentTask));
+        updateSelections((HTMLDocument) this.instructionPane.getEditorPane().getDocument(), this.task);
         if (currentTask.isCooperativeWorkOsmChange()) {
             final var cooperativePanel = this.cooperativeWork;
             cooperativePanel.removeAll();
@@ -190,6 +221,60 @@ public final class CurrentTaskPanel extends ToggleDialog {
                 this.cooperativeWork.setVisible(false);
             }
         }
+    }
+
+    /**
+     * Update the selections in a doc from the stored selections
+     * @param doc The doc to update
+     * @param task The task to get the selections for
+     */
+    private static void updateSelections(HTMLDocument doc, Task task) {
+        final var modifiedTask = ModifiedObjects.getModifiedTask(task.id());
+        if (modifiedTask != null && modifiedTask.completionResponses() != null) {
+            final var selectIterator = doc.getIterator(HTML.Tag.SELECT);
+            while (selectIterator.isValid()) {
+                final var attribs = selectIterator.getAttributes();
+                if (attribs.getAttribute(HTML.Attribute.NAME) != null) {
+                    final var name = (String) attribs.getAttribute(HTML.Attribute.NAME);
+                    if (modifiedTask.completionResponses().get(name) != null && attribs
+                            .getAttribute(StyleConstants.ModelAttribute)instanceof DefaultComboBoxModel<?> listModel) {
+                        final var expectedOption = modifiedTask.completionResponses().get(name);
+                        for (var i = 0; i < listModel.getSize(); i++) {
+                            final var currentOption = (Option) listModel.getElementAt(i);
+                            if (Objects.equals(currentOption.getValue(), expectedOption.getValue())) {
+                                listModel.setSelectedItem(currentOption);
+                                break;
+                            }
+                        }
+                    }
+                }
+                selectIterator.next();
+            }
+        }
+    }
+
+    /**
+     * Get the selections from the comboboxes of a document
+     * @param doc The document to parse
+     * @return The selected options
+     */
+    private static Map<String, Option> getSelections(HTMLDocument doc) {
+        final var selectionMap = new TreeMap<String, Option>();
+        final var selectIterator = doc.getIterator(HTML.Tag.SELECT);
+        while (selectIterator.isValid()) {
+            final var attribs = selectIterator.getAttributes();
+            if (attribs.getAttribute(HTML.Attribute.NAME) != null) {
+                final var name = (String) attribs.getAttribute(HTML.Attribute.NAME);
+                if (attribs.getAttribute(StyleConstants.ModelAttribute)instanceof DefaultComboBoxModel<?> listModel) {
+                    final var option = (Option) listModel.getSelectedItem();
+                    if (!Utils.isBlank(option.getValue())) {
+                        selectionMap.put(name, option);
+                    }
+                }
+            }
+            selectIterator.next();
+        }
+        return Collections.unmodifiableMap(selectionMap);
     }
 
     /**
@@ -245,14 +330,17 @@ public final class CurrentTaskPanel extends ToggleDialog {
          * The supplier that will give us the current task
          */
         private final Supplier<Task> currentTaskProvider;
+        private final Supplier<HTMLDocument> currentDocumentProvider;
 
         /**
          * Create a new task status action
          *
          * @param status              The status to use
          * @param currentTaskProvider The current task provider
+         * @param currentDocumentProvider The current document provider -- used to generate completion responses from select tags
          */
-        TaskStatusAction(TaskStatus status, Supplier<Task> currentTaskProvider) {
+        TaskStatusAction(TaskStatus status, Supplier<Task> currentTaskProvider,
+                Supplier<HTMLDocument> currentDocumentProvider) {
             super(status.description(), getIconName(status), status.description(),
                     Shortcut.registerShortcut("maproulette:" + status.name().toLowerCase(Locale.ENGLISH),
                             tr("MapRoulette: Mark Task as {0}", status.description()), KeyEvent.CHAR_UNDEFINED,
@@ -260,6 +348,7 @@ public final class CurrentTaskPanel extends ToggleDialog {
                     false);
             this.status = status;
             this.currentTaskProvider = currentTaskProvider;
+            this.currentDocumentProvider = currentDocumentProvider;
         }
 
         /**
@@ -328,7 +417,8 @@ public final class CurrentTaskPanel extends ToggleDialog {
         private void handleTask(Task task) {
             // TODO put extended dialog here, ask for comment/tags/null -- don't forget to use the bulk operation methods
             if (task != null) {
-                ModifiedObjects.addModifiedTask(new ModifiedTask(task, this.status, null, null, null));
+                ModifiedObjects.addModifiedTask(new ModifiedTask(task, this.status, null, null, null,
+                        getSelections(this.currentDocumentProvider.get())));
             }
             if (task != null && task.isCooperativeWorkOsmChange() && this.status == TaskStatus.FIXED) {
                 final var command = new ApplyCooperativeChange(

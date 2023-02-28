@@ -94,7 +94,7 @@ public final class EarlyUploadHook implements UploadHook {
                         tr("Did you finish the following MapRoulette Task?"), JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION);
                 if (didFix) {
-                    ModifiedObjects.addModifiedTask(new ModifiedTask(task, TaskStatus.FIXED, null, null, null));
+                    ModifiedObjects.addModifiedTask(new ModifiedTask(task, TaskStatus.FIXED, null, null, null, null));
                 }
             }
         }

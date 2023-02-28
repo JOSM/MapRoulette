@@ -87,7 +87,7 @@ class EarlyUploadHookTest {
     @Test
     void testManyClosedTasks() {
         for (int i = 100_000_000; i < 100_000_050; i++) {
-            ModifiedObjects.addModifiedTask(new ModifiedTask(new Task(i, "", null, null, 15318, null, null, null, null, null, null, null, null, null, 0, null, null, null, false, null, null), TaskStatus.FIXED, null, null, null));
+            ModifiedObjects.addModifiedTask(new ModifiedTask(new Task(i, "", null, null, 15318, null, null, null, null, null, null, null, null, null, 0, null, null, null, false, null, null), TaskStatus.FIXED, null, null, null, null));
         }
         final var map = new HashMap<String, String>();
         hook.modifyChangesetTags(map);

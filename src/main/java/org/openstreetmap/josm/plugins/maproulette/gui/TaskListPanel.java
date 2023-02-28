@@ -429,7 +429,7 @@ public final class TaskListPanel extends ToggleDialog
                     final var modified = ModifiedObjects.getModifiedTask(task.id());
                     if (modified != null && modified.status() != TaskStatus.FIXED) {
                         TaskAPI.updateStatus(task.id(), modified.status(), modified.comment(), modified.tags(),
-                                modified.reviewRequested());
+                                modified.reviewRequested(), modified.completionResponses());
                         ModifiedObjects.removeModifiedTask(modified);
                     }
                     ModifiedObjects.removeLockedTask(task);
