@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.maproulette.gui;
+package org.openstreetmap.josm.plugins.maproulette.gui.task.list;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -10,7 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
@@ -103,15 +102,6 @@ final class TaskTableModel extends AbstractTableModel
         } else {
             GuiHelper.runInEDT(() -> accept(longClusteredPointMap));
         }
-    }
-
-    /**
-     * Stream the data
-     *
-     * @return The data as a stream
-     */
-    public Stream<TaskClusteredPoint> stream() {
-        return this.taskList.stream();
     }
 
     /**

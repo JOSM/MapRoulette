@@ -20,7 +20,7 @@ import org.openstreetmap.josm.gui.MapViewState;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.maproulette.actions.IgnoreAction;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Identifier;
-import org.openstreetmap.josm.plugins.maproulette.gui.TaskListPanel;
+import org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel;
 import org.openstreetmap.josm.plugins.maproulette.gui.TaskListPanelTest;
 import org.openstreetmap.josm.plugins.maproulette.util.Main;
 import org.openstreetmap.josm.plugins.maproulette.util.MapRouletteConfig;

@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.maproulette.gui;
+package org.openstreetmap.josm.plugins.maproulette.gui.task.current;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -10,19 +10,15 @@ import java.awt.event.KeyEvent;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
@@ -33,21 +29,18 @@ import javax.swing.text.html.Option;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmDataManager;
-import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
-import org.openstreetmap.josm.plugins.maproulette.api_caching.TaskCache;
-import org.openstreetmap.josm.plugins.maproulette.data.ApplyCooperativeChange;
-import org.openstreetmap.josm.plugins.maproulette.data.ApplyOscChange;
 import org.openstreetmap.josm.plugins.maproulette.data.TaskPrimitives;
+import org.openstreetmap.josm.plugins.maproulette.gui.MRGuiHelper;
+import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
+import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedTask;
+import org.openstreetmap.josm.plugins.maproulette.gui.TagChangeTable;
 import org.openstreetmap.josm.plugins.maproulette.gui.preferences.MapRoulettePreferences;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
@@ -171,6 +164,14 @@ public final class CurrentTaskPanel extends ToggleDialog {
         this.refreshPanel();
     }
 
+    /**
+     * Get the actions for the panel
+     * @return The actions
+     */
+    InnerAction[] actions() {
+        return actions;
+    }
+
     private void refreshPanel() {
         final var currentTask = this.task;
         this.panel.setBackground(UIManager.getColor("Panel.background"));
@@ -259,7 +260,7 @@ public final class CurrentTaskPanel extends ToggleDialog {
      * @param doc The document to parse
      * @return The selected options
      */
-    private static Map<String, Option> getSelections(HTMLDocument doc) {
+    static Map<String, Option> getSelections(HTMLDocument doc) {
         final var selectionMap = new TreeMap<String, Option>();
         final var selectIterator = doc.getIterator(HTML.Tag.SELECT);
         while (selectIterator.isValid()) {
@@ -281,7 +282,7 @@ public final class CurrentTaskPanel extends ToggleDialog {
     /**
      * An action purely for making it easier to call {@link JosmAction#updateEnabledState()}.
      */
-    private abstract static class InnerAction extends JosmAction {
+    abstract static class InnerAction extends JosmAction {
         /**
          * Serial UID for this action
          */
@@ -311,189 +312,6 @@ public final class CurrentTaskPanel extends ToggleDialog {
         @Override
         public void updateEnabledState() {
             super.updateEnabledState();
-        }
-    }
-
-    /**
-     * Update the status for a task
-     */
-    private static class TaskStatusAction extends InnerAction {
-        /**
-         * The serial UID for this action
-         */
-        @Serial
-        private static final long serialVersionUID = -7143294590412539737L;
-        /**
-         * The status for this task
-         */
-        private final TaskStatus status;
-        /**
-         * The supplier that will give us the current task
-         */
-        private final Supplier<Task> currentTaskProvider;
-        private final Supplier<HTMLDocument> currentDocumentProvider;
-
-        /**
-         * Create a new task status action
-         *
-         * @param status              The status to use
-         * @param currentTaskProvider The current task provider
-         * @param currentDocumentProvider The current document provider -- used to generate completion responses from select tags
-         */
-        TaskStatusAction(TaskStatus status, Supplier<Task> currentTaskProvider,
-                Supplier<HTMLDocument> currentDocumentProvider) {
-            super(status.description(), getIconName(status), status.description(),
-                    Shortcut.registerShortcut("maproulette:" + status.name().toLowerCase(Locale.ENGLISH),
-                            tr("MapRoulette: Mark Task as {0}", status.description()), KeyEvent.CHAR_UNDEFINED,
-                            Shortcut.NONE),
-                    false);
-            this.status = status;
-            this.currentTaskProvider = currentTaskProvider;
-            this.currentDocumentProvider = currentDocumentProvider;
-        }
-
-        /**
-         * Get the icon name for a status type
-         *
-         * @param status The status type
-         * @return The icon name
-         */
-        private static String getIconName(TaskStatus status) {
-            return switch (status) {
-            case FIXED, ALREADY_FIXED -> "dialogs/validator";
-            case TOO_HARD, FALSE_POSITIVE -> "cancel";
-            case SKIPPED -> "svpRight";
-            default -> "presets/misc/no_icon";
-            };
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            final var selected = new ArrayList<>(
-                    MainApplication.getMap().getToggleDialog(TaskListPanel.class).getSelected());
-            final var task = this.currentTaskProvider.get();
-            if (task != null) {
-                selected.removeIf(p -> p.id() == task.id());
-            }
-            handleTask(task);
-            if (!selected.isEmpty()) {
-                final var markAll = ConditionalOptionPaneUtil.showConfirmationDialog("TaskStatusAction.bulkUpdate",
-                        MainApplication.getMainFrame(),
-                        tr("<html>Mark all selected tasks?<br>This will apply all tag fixes and geometry fixes!</html>"),
-                        tr("Mark all selected tasks?"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-                        JOptionPane.YES_OPTION);
-                if (markAll) {
-                    for (var toMark : selected) {
-                        if (toMark instanceof Task t) {
-                            handleTask(t);
-                        } else {
-                            handleTask(TaskCache.get(toMark.id()));
-                        }
-                    }
-                }
-            }
-
-            // Use the first enabled action (not this, in otherwords)
-            SideButton button = null;
-            if (e.getSource()instanceof JMenuItem menuItem && menuItem.getParent()instanceof JPopupMenu menu
-                    && menu.getInvoker()instanceof SideButton sideButton) {
-                if (sideButton.getAction() == this) {
-                    final var newAction = Stream.of(menu.getSubElements()).filter(JMenuItem.class::isInstance)
-                            .map(item -> ((JMenuItem) item).getAction()).filter(Action::isEnabled)
-                            .filter(action -> action != this).findFirst().orElse(this);
-                    sideButton.setAction(newAction);
-                }
-                button = sideButton;
-                sideButton.setAction(this);
-            } else if (e.getSource()instanceof SideButton sideButton) {
-                button = sideButton;
-            }
-            if (button != null && button.getParent().getParent().getParent()instanceof CurrentTaskPanel panel) {
-                for (var action : panel.actions) {
-                    action.updateEnabledState();
-                }
-            }
-        }
-
-        private void handleTask(Task task) {
-            // TODO put extended dialog here, ask for comment/tags/null -- don't forget to use the bulk operation methods
-            if (task != null) {
-                final var modifiedTask = new ModifiedTask(task, this.status, null, null, null,
-                        getSelections(this.currentDocumentProvider.get()));
-                ModifiedObjects.addModifiedTask(modifiedTask);
-                if (task.isCooperativeWorkOsmChange() && this.status == TaskStatus.FIXED) {
-                    final var command = new ApplyCooperativeChange(
-                            Objects.requireNonNull(task.cooperativeWorkAsOsmChange()))
-                                    .generateCommand(OsmDataManager.getInstance().getEditDataSet());
-                    if (command != null) {
-                        command.executeCommand();
-                        if (!command.getParticipatingPrimitives().isEmpty()) {
-                            UndoRedoHandler.getInstance().add(command, false);
-                        }
-                    }
-                } else if (task.isCooperativeWorkOsc() && this.status == TaskStatus.FIXED) {
-                    final var message = tr("Apply OSC directly to the edit layer?");
-                    final var options = new String[] { tr("Apply"), tr("Show"), tr("Cancel") };
-                    final var option = ConditionalOptionPaneUtil.showOptionDialog("maproulette.task.apply_osc",
-                            MainApplication.getMainFrame(), message, message, JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.YES_OPTION, options, options[0]);
-                    final var osc = Objects.requireNonNull(task.cooperativeWorkAsOsc());
-                    if (option == 0) {
-                        UndoRedoHandler.getInstance()
-                                .add(new ApplyOscChange(OsmDataManager.getInstance().getEditDataSet(), osc.a));
-                    } else if (option == 1) {
-                        final var layer = new OsmDataLayer(osc.a, task.name(), null);
-                        MainApplication.getLayerManager().addLayer(layer);
-                    } else {
-                        ModifiedObjects.removeModifiedTask(modifiedTask);
-                        return;
-                    }
-                }
-            }
-            Optional.ofNullable(MainApplication.getMap().getToggleDialog(CurrentTaskPanel.class))
-                    .ifPresent(p -> p.refreshModel(task));
-        }
-
-        @Override
-        public void updateEnabledState() {
-            if (this.currentTaskProvider != null) {
-                final var task = this.currentTaskProvider.get();
-                if (task != null) {
-                    // Disable buttons when the state has been modified
-                    final var state = Optional.ofNullable(ModifiedObjects.getModifiedTask(task.id()))
-                            .map(ModifiedTask::status).orElse(task.status());
-                    if (task.cooperativeWork() == null) {
-                        this.putValue(NAME, this.status.description());
-                        this.setTooltip(this.status.description());
-                    } else if (task.isCooperativeWorkOsmChange()) {
-                        switch (this.status) {
-                        case FALSE_POSITIVE -> {
-                            this.putValue(NAME, tr("No"));
-                            this.setTooltip(tr("No: the suggested tags are wrong"));
-                        }
-                        case FIXED -> {
-                            this.putValue(NAME, tr("Yes"));
-                            this.setTooltip(tr("Yes: the suggested tags are correct"));
-                        }
-                        default -> {
-                            this.putValue(NAME, this.status.description());
-                            this.setTooltip(this.status.description());
-                        }
-                        }
-                    } else if (task.isCooperativeWorkOsc()) {
-                        if (Objects.requireNonNull(this.status) == TaskStatus.FIXED) {
-                            this.putValue(NAME, tr("Apply OSC"));
-                            this.setTooltip(tr("Apply the suggested change from the task"));
-                        } else {
-                            this.putValue(NAME, this.status.description());
-                            this.setTooltip(this.status.description());
-                        }
-                    }
-                    this.setEnabled(status != state);
-                    return;
-                }
-            }
-            this.setEnabled(false);
         }
     }
 

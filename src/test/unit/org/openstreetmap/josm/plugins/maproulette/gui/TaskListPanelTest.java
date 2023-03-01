@@ -20,6 +20,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapViewState;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.maproulette.actions.IgnoreAction;
+import org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel;
 import org.openstreetmap.josm.plugins.maproulette.util.LoggingHandler;
 import org.openstreetmap.josm.plugins.maproulette.util.Main;
 import org.openstreetmap.josm.plugins.maproulette.util.MapRouletteConfig;
@@ -83,7 +84,7 @@ public class TaskListPanelTest {
         final var action = ((JButton) ((JComponent) ((JComponent) taskListPanel.getComponent(2 /* The side buttons */))
                 .getComponent(0 /* A singular JPanel */))
                 .getComponent(0 /* The download button */)).getAction();
-        assertEquals("org.openstreetmap.josm.plugins.maproulette.gui.TaskListPanel$DownloadDataAction", action.getClass().getName());
+        assertEquals("org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel$DownloadDataAction", action.getClass().getName());
         return action;
     }
 }
