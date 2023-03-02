@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.maproulette.io.upload;
 
 import static org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig.getBaseUrl;
+import static org.openstreetmap.josm.plugins.maproulette.gui.task.current.CurrentTaskPanel.getSelections;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
@@ -20,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.text.html.HTMLDocument;
 
 import org.openstreetmap.josm.actions.upload.UploadHook;
 import org.openstreetmap.josm.data.APIDataSet;
@@ -89,12 +91,15 @@ public final class EarlyUploadHook implements UploadHook {
         ConditionalOptionPaneUtil.startBulkOperation(PREF_CHECK_IF_FINISHED);
         for (var task : possibleTasks) {
             if (ids.containsAll(TaskPrimitives.getPrimitiveIds(task))) {
+                final var descriptivePanel = createDescriptivePanel(task, apiDataSet);
                 final var didFix = ConditionalOptionPaneUtil.showConfirmationDialog(PREF_CHECK_IF_FINISHED,
-                        MainApplication.getMainFrame(), createDescriptivePanel(task, apiDataSet),
+                        MainApplication.getMainFrame(), descriptivePanel,
                         tr("Did you finish the following MapRoulette Task?"), JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION);
                 if (didFix) {
-                    ModifiedObjects.addModifiedTask(new ModifiedTask(task, TaskStatus.FIXED, null, null, null, null));
+                    final var doc = (HTMLDocument) ((JosmEditorPane) descriptivePanel.getComponent(1)).getDocument();
+                    ModifiedObjects.addModifiedTask(
+                            new ModifiedTask(task, TaskStatus.FIXED, null, null, null, getSelections(doc)));
                 }
             }
         }

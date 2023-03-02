@@ -264,7 +264,7 @@ public final class CurrentTaskPanel extends ToggleDialog {
      * @param doc The document to parse
      * @return The selected options
      */
-    static Map<String, Option> getSelections(HTMLDocument doc) {
+    public static Map<String, Option> getSelections(HTMLDocument doc) {
         final var selectionMap = new TreeMap<String, Option>();
         final var selectIterator = doc.getIterator(HTML.Tag.SELECT);
         while (selectIterator.isValid()) {
