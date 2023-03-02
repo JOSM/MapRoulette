@@ -22,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
@@ -234,12 +236,14 @@ public final class CurrentTaskPanel extends ToggleDialog {
         final var modifiedTask = ModifiedObjects.getModifiedTask(task.id());
         if (modifiedTask != null && modifiedTask.completionResponses() != null) {
             final var selectIterator = doc.getIterator(HTML.Tag.SELECT);
+            final var selectListener = new SelectComboBoxListener(doc, task);
             while (selectIterator.isValid()) {
                 final var attribs = selectIterator.getAttributes();
                 if (attribs.getAttribute(HTML.Attribute.NAME) != null) {
                     final var name = (String) attribs.getAttribute(HTML.Attribute.NAME);
                     if (modifiedTask.completionResponses().get(name) != null && attribs
                             .getAttribute(StyleConstants.ModelAttribute)instanceof DefaultComboBoxModel<?> listModel) {
+                        listModel.addListDataListener(selectListener);
                         final var expectedOption = modifiedTask.completionResponses().get(name);
                         for (var i = 0; i < listModel.getSize(); i++) {
                             final var currentOption = (Option) listModel.getElementAt(i);
@@ -280,80 +284,112 @@ public final class CurrentTaskPanel extends ToggleDialog {
     }
 
     /**
-     * An action purely for making it easier to call {@link JosmAction#updateEnabledState()}.
+     * A listener for select combo boxes from a {@link HTMLDocument}
+     * @param doc The document to use to update a task from
+     * @param task The originating task
      */
-    abstract static class InnerAction extends JosmAction {
-        /**
-         * Serial UID for this action
-         */
-        @Serial
-        private static final long serialVersionUID = -6428448152026023173L;
+    private record SelectComboBoxListener(HTMLDocument doc, Task task) implements ListDataListener {
 
-        /**
-         * Constructs a new {@code JosmAction} and installs layer changed and selection changed adapters.
-         * <br>
-         * Use this super constructor to setup your action.
-         *
-         * @param name              the action's text as displayed on the menu (if it is added to a menu)
-         * @param iconName          the filename of the icon to use
-         * @param tooltip           a longer description of the action that will be displayed in the tooltip. Please note
-         *                          that html is not supported for menu actions on some platforms.
-         * @param shortcut          a ready-created shortcut object or null if you don't want a shortcut. But you always
-         *                          do want a shortcut, remember you can always register it with group=none, so you
-         *                          won't be assigned a shortcut unless the user configures one. If you pass null here,
-         *                          the user CANNOT configure a shortcut for your action.
-         * @param registerInToolbar register this action for the toolbar preferences?
-         */
-        protected InnerAction(String name, String iconName, String tooltip, Shortcut shortcut,
-                boolean registerInToolbar) {
-            super(name, iconName, tooltip, shortcut, registerInToolbar, true);
-        }
-
-        @Override
-        public void updateEnabledState() {
-            super.updateEnabledState();
-        }
+    @Override
+    public void intervalAdded(ListDataEvent e) {
+        updateModifiedTask();
     }
 
-    /**
-     * Select the task primitives
-     */
-    private static class SelectOsmPrimitives extends InnerAction {
-        /**
-         * The serial UID for this action
-         */
-        @Serial
-        private static final long serialVersionUID = -5705885041487335379L;
-        private final Supplier<Task> taskSuppler;
+    @Override
+    public void intervalRemoved(ListDataEvent e) {
+        updateModifiedTask();
+    }
 
-        SelectOsmPrimitives(Supplier<Task> taskSupplier) {
-            super(tr("Select Primitives"), "dialogs/select", tr("Select the OSM primitives for this task"),
-                    Shortcut.registerShortcut("maproulette:select_task_primitives",
-                            tr("MapRoulette: Select task primitives"), KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
-                    false);
-            Objects.requireNonNull(taskSupplier);
-            this.taskSuppler = taskSupplier;
-        }
+    @Override
+    public void contentsChanged(ListDataEvent e) {
+        updateModifiedTask();
+    }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            final var task = this.taskSuppler.get();
-            if (task != null) {
-                final var primitives = TaskPrimitives.getPrimitiveIds(task);
-                if (!primitives.isEmpty()) {
-                    OsmDataManager.getInstance().getEditDataSet().setSelected(primitives);
-                    AutoScaleAction.autoScale(AutoScaleAction.AutoScaleMode.SELECTION);
-                }
-            }
-        }
-
-        @Override
-        public void updateEnabledState() {
-            if (this.taskSuppler != null) { // This check is only needed for the constructor. Watch JEP draft 8300786.
-                final var task = this.taskSuppler.get();
-                this.setEnabled(!Optional.ofNullable(task).map(TaskPrimitives::getPrimitiveIds)
-                        .orElse(Collections.emptyList()).isEmpty());
-            }
+    private void updateModifiedTask() {
+        final var originalModifiedTask = ModifiedObjects.getModifiedTask(this.task.id());
+        if (originalModifiedTask != null) {
+            final var modifiedTask = new ModifiedTask(originalModifiedTask.task(), originalModifiedTask.status(),
+                    originalModifiedTask.comment(), originalModifiedTask.tags(), originalModifiedTask.reviewRequested(),
+                    getSelections(doc));
+            ModifiedObjects.removeModifiedTask(originalModifiedTask);
+            ModifiedObjects.addModifiedTask(modifiedTask);
         }
     }
 }
+
+/**
+ * An action purely for making it easier to call {@link JosmAction#updateEnabledState()}.
+ */
+abstract static class InnerAction extends JosmAction {
+    /**
+     * Serial UID for this action
+     */
+    @Serial
+    private static final long serialVersionUID = -6428448152026023173L;
+
+    /**
+     * Constructs a new {@code JosmAction} and installs layer changed and selection changed adapters.
+     * <br>
+     * Use this super constructor to setup your action.
+     *
+     * @param name              the action's text as displayed on the menu (if it is added to a menu)
+     * @param iconName          the filename of the icon to use
+     * @param tooltip           a longer description of the action that will be displayed in the tooltip. Please note
+     *                          that html is not supported for menu actions on some platforms.
+     * @param shortcut          a ready-created shortcut object or null if you don't want a shortcut. But you always
+     *                          do want a shortcut, remember you can always register it with group=none, so you
+     *                          won't be assigned a shortcut unless the user configures one. If you pass null here,
+     *                          the user CANNOT configure a shortcut for your action.
+     * @param registerInToolbar register this action for the toolbar preferences?
+     */
+    protected InnerAction(String name, String iconName, String tooltip, Shortcut shortcut, boolean registerInToolbar) {
+        super(name, iconName, tooltip, shortcut, registerInToolbar, true);
+    }
+
+    @Override
+    public void updateEnabledState() {
+        super.updateEnabledState();
+    }
+}
+
+/**
+ * Select the task primitives
+ */
+private static class SelectOsmPrimitives extends InnerAction {
+    /**
+     * The serial UID for this action
+     */
+    @Serial
+    private static final long serialVersionUID = -5705885041487335379L;
+    private final Supplier<Task> taskSuppler;
+
+    SelectOsmPrimitives(Supplier<Task> taskSupplier) {
+        super(tr("Select Primitives"), "dialogs/select", tr("Select the OSM primitives for this task"),
+                Shortcut.registerShortcut("maproulette:select_task_primitives",
+                        tr("MapRoulette: Select task primitives"), KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
+                false);
+        Objects.requireNonNull(taskSupplier);
+        this.taskSuppler = taskSupplier;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        final var task = this.taskSuppler.get();
+        if (task != null) {
+            final var primitives = TaskPrimitives.getPrimitiveIds(task);
+            if (!primitives.isEmpty()) {
+                OsmDataManager.getInstance().getEditDataSet().setSelected(primitives);
+                AutoScaleAction.autoScale(AutoScaleAction.AutoScaleMode.SELECTION);
+            }
+        }
+    }
+
+    @Override
+    public void updateEnabledState() {
+        if (this.taskSuppler != null) { // This check is only needed for the constructor. Watch JEP draft 8300786.
+            final var task = this.taskSuppler.get();
+            this.setEnabled(!Optional.ofNullable(task).map(TaskPrimitives::getPrimitiveIds)
+                    .orElse(Collections.emptyList()).isEmpty());
+        }
+    }
+}}
