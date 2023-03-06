@@ -43,16 +43,15 @@ public final class BundleAPI {
      *
      * @param bundle The bundle to create
      * @return The created bundle. This is <i>not</i> the same as the bundle sent in.
+     * @throws IOException if there was a problem communicating with the server
      */
     @Nonnull
-    public static TaskBundle createBundle(TaskBundle bundle) {
+    public static TaskBundle createBundle(TaskBundle bundle) throws IOException {
         final var client = post(getBaseUrl() + PATH, null); // fixme add body
         try {
             try (var inputStream = client.connect().getContent()) {
                 return parseBundle(inputStream);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }

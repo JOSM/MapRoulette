@@ -1,6 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.gui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
@@ -13,9 +16,11 @@ import javax.annotation.Nullable;
 
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.openstreetmap.josm.plugins.maproulette.api.model.Challenge;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.ChallengeCache;
 import org.openstreetmap.josm.plugins.maproulette.markdown.SelectParser;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -23,7 +28,7 @@ import org.openstreetmap.josm.tools.Utils;
  */
 public final class MRGuiHelper {
     /**
-     * Replace mustache variables (see https://learn.maproulette.org/documentation/mustache-tag-replacement/)
+     * Replace mustache variables (see <a href="https://learn.maproulette.org/documentation/mustache-tag-replacement/">MapRoulette mustache tag replacement</a>)
      */
     private static final Pattern MUSTACHE_PATTERN = Pattern.compile("[{]{2}(.*?)[}]{2}");
     /**
@@ -53,8 +58,16 @@ public final class MRGuiHelper {
         }
         final String instruction;
         if (Utils.isBlank(currentTask.instruction())) {
-            final var challenge = ChallengeCache.challenge(currentTask.parentId());
-            if (!Utils.isBlank(challenge.general().instruction())) {
+            Challenge challenge;
+            try {
+                challenge = ChallengeCache.challenge(currentTask.parentId());
+            } catch (IOException ioException) {
+                ExceptionDialogUtil.explainException(ioException);
+                challenge = null;
+            }
+            if (challenge == null) {
+                instruction = tr("Could not fetch instruction from parent challenge");
+            } else if (!Utils.isBlank(challenge.general().instruction())) {
                 instruction = challenge.general().instruction();
             } else if (!Utils.isBlank(challenge.description())) {
                 instruction = challenge.description();

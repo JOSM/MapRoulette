@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
 import org.openstreetmap.josm.plugins.maproulette.gui.layer.MapRouletteClusteredPointLayer;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -86,6 +88,8 @@ final class LockUnlockTaskAction extends JosmAction {
             } catch (UnauthorizedException unauthorizedException) {
                 Logging.trace(unauthorizedException);
                 messages.add(unauthorizedException.getMessage());
+            } catch (IOException e) {
+                ExceptionDialogUtil.explainException(e);
             }
         }
         if (!messages.isEmpty()) {
@@ -119,19 +123,23 @@ final class LockUnlockTaskAction extends JosmAction {
             final var i = this.table.getRowSorter().convertRowIndexToModel(index);
             final var cluster = data.get(i);
             final var task = ModifiedObjects.getLockedTask(cluster.id());
-            final var unlockedTask = TaskAPI.release(cluster.id());
-            if (task != null && task.id() == unlockedTask.id()) {
-                final var modified = ModifiedObjects.getModifiedTask(task.id());
-                if (modified != null && modified.status() != TaskStatus.FIXED) {
-                    TaskAPI.updateStatus(task.id(), modified.status(), modified.comment(), modified.tags(),
-                            modified.reviewRequested(), modified.completionResponses());
-                    ModifiedObjects.removeModifiedTask(modified);
+            try {
+                final var unlockedTask = TaskAPI.release(cluster.id());
+                if (task != null && task.id() == unlockedTask.id()) {
+                    final var modified = ModifiedObjects.getModifiedTask(task.id());
+                    if (modified != null && modified.status() != TaskStatus.FIXED) {
+                        TaskAPI.updateStatus(task.id(), modified.status(), modified.comment(), modified.tags(),
+                                modified.reviewRequested(), modified.completionResponses());
+                        ModifiedObjects.removeModifiedTask(modified);
+                    }
+                    ModifiedObjects.removeLockedTask(task);
                 }
-                ModifiedObjects.removeLockedTask(task);
+                final var newPoint = TaskAPI.get(cluster.id());
+                MainApplication.getLayerManager().getLayersOfType(MapRouletteClusteredPointLayer.class)
+                        .forEach(layer -> layer.refreshTasks(Map.of(newPoint.id(), newPoint)));
+            } catch (IOException ioException) {
+                ExceptionDialogUtil.explainException(ioException);
             }
-            final var newPoint = TaskAPI.get(cluster.id());
-            MainApplication.getLayerManager().getLayersOfType(MapRouletteClusteredPointLayer.class)
-                    .forEach(layer -> layer.refreshTasks(Map.of(newPoint.id(), newPoint)));
         }
         ((TaskTableModel) this.table.getModel()).fireTableDataChanged();
         reselect(selected);

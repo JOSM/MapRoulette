@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api.model;
 
+import java.io.IOException;
 import java.time.Instant;
 
 import javax.annotation.Nonnull;
@@ -48,8 +49,9 @@ public record ClusteredPoint(long id, long owner, @Nonnull String ownerName, Str
      * Get the task for this point.
      *
      * @return The task.
+     * @throws IOException if there was a problem communicating with the server
      */
-    public Task task() {
+    public Task task() throws IOException {
         return TaskAPI.get(this.id());
     }
 

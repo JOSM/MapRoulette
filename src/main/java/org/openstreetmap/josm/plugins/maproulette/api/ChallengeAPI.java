@@ -10,7 +10,6 @@ import static org.openstreetmap.josm.plugins.maproulette.util.HttpClientUtils.ge
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.time.Instant;
 import java.util.Map;
 import java.util.TreeMap;
@@ -83,17 +82,16 @@ public final class ChallengeAPI {
      * @param currentTask The current task
      * @param status      The task status to limit the response by
      * @return The next task
+     * @throws IOException if there was a problem communicating with the server
      */
     @Nonnull
-    public static Task nextTask(long challengeId, long currentTask, String... status) {
+    public static Task nextTask(long challengeId, long currentTask, String... status) throws IOException {
         final var client = get(getBaseUrl() + PATH + "/" + challengeId + "/nextTask/" + currentTask,
                 status.length > 0 ? Map.of("statusList", String.join(",", status)) : null);
         try {
             try (var inputStream = client.connect().getContent()) {
                 return (Task) TaskParser.parseTask(inputStream);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -106,17 +104,16 @@ public final class ChallengeAPI {
      * @param currentTask The current task
      * @param status      The task status to limit the response by
      * @return The previous task
+     * @throws IOException if there was a problem communicating with the server
      */
     @Nonnull
-    public static Task previousTask(long challengeId, long currentTask, String... status) {
+    public static Task previousTask(long challengeId, long currentTask, String... status) throws IOException {
         final var client = get(getBaseUrl() + PATH + "/" + challengeId + "/previousTask/" + currentTask,
                 status.length > 0 ? Map.of("statusList", String.join(",", status)) : null);
         try {
             try (var inputStream = client.connect().getContent()) {
                 return (Task) TaskParser.parseTask(inputStream);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -131,10 +128,11 @@ public final class ChallengeAPI {
      * @param limit        The number of prioritized tasks to get. If less than zero, one is used.
      * @param proximity    The current task
      * @return The next task
+     * @throws IOException if there was a problem communicating with the server
      */
     @Nonnull
     public static Task[] prioritizedTask(long challengeId, @Nullable String searchString, @Nullable String[] tags,
-            int limit, long proximity) {
+            int limit, long proximity) throws IOException {
         return taskCollectionEndpoints("/tasks/prioritizedTasks", challengeId, searchString, tags, limit, proximity);
     }
 
@@ -147,9 +145,10 @@ public final class ChallengeAPI {
      * @param limit        The number of prioritized tasks to get. If less than zero, one is used.
      * @param proximity    The current task
      * @return The next task
+     * @throws IOException if there was a problem communicating with the server
      */
     private static Task[] taskCollectionEndpoints(@Nonnull String path, long challengeId, @Nullable String searchString,
-            @Nullable String[] tags, int limit, long proximity) {
+            @Nullable String[] tags, int limit, long proximity) throws IOException {
         Map<String, String> query = new TreeMap<>();
         if (searchString != null && !searchString.isBlank()) {
             query.put("s", searchString);
@@ -168,8 +167,6 @@ public final class ChallengeAPI {
             try (var inputStream = client.connect().getContent()) {
                 return (Task[]) TaskParser.parseTask(inputStream);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -184,9 +181,10 @@ public final class ChallengeAPI {
      * @param limit        The number of prioritized tasks to get. If less than zero, one is used.
      * @param proximity    The current task
      * @return The next task
+     * @throws IOException if there was a problem communicating with the server
      */
     public static Task[] randomTask(long challengeId, @Nullable String searchString, @Nullable String[] tags, int limit,
-            long proximity) {
+            long proximity) throws IOException {
         return taskCollectionEndpoints("/tasks/prioritizedTasks", challengeId, searchString, tags, limit, proximity);
     }
 
@@ -200,9 +198,10 @@ public final class ChallengeAPI {
      * @param proximity         id of task around which geographically closest tasks are desired
      *                          (note: this seems like it might be a bug in the API)
      * @return The tasks
+     * @throws IOException if there was a problem communicating with the server
      */
     public static Task[] tasksNearby(long challengeId, long proximityId, boolean excludeSelfLocked, int limit,
-            long proximity) {
+            long proximity) throws IOException {
         Map<String, String> query = new TreeMap<>();
         if (!excludeSelfLocked) {
             query.put("excludeSelfLocked", "true");
@@ -218,8 +217,6 @@ public final class ChallengeAPI {
             try (var inputStream = client.connect().getContent()) {
                 return (Task[]) TaskParser.parseTask(inputStream);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -230,15 +227,14 @@ public final class ChallengeAPI {
      *
      * @param challengeId The challenge to get
      * @return The challenge
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Challenge challenge(long challengeId) {
+    public static Challenge challenge(long challengeId) throws IOException {
         final var client = get(getBaseUrl() + PATH + "/" + challengeId, null);
         try {
             try (var inputstream = client.connect().getContent()) {
                 return parseChallenge(inputstream);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }

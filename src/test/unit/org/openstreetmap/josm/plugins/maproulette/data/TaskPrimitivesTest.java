@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.maproulette.data;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,7 +18,7 @@ import org.openstreetmap.josm.plugins.maproulette.util.MapRouletteConfig;
 class TaskPrimitivesTest {
     @Test
     void testGetPrimitiveIdsNode() {
-        final var task = TaskAPI.start(132279499);
+        final var task = assertDoesNotThrow(() -> TaskAPI.start(132279499));
         assertFalse(TaskPrimitives.getPrimitiveIds(task).isEmpty());
         assertEquals(1, TaskPrimitives.getPrimitiveIds(task).size());
         final var nodeId = TaskPrimitives.getPrimitiveIds(task).iterator().next();
@@ -32,7 +33,7 @@ class TaskPrimitivesTest {
 
     @Test
     void testGetPrimitiveIdsNoIdentifier() {
-        final var task = TaskAPI.start(132279499);
+        final var task = assertDoesNotThrow(() -> TaskAPI.start(132279499));
         task.geometries().allPrimitives().forEach(p -> p.remove("osmIdentifier"));
         assertTrue(TaskPrimitives.getPrimitiveIds(task).isEmpty());
     }

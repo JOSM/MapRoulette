@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,7 +35,7 @@ class TaskParserTest {
      */
     @Test
     void testTaskParsing135045992() {
-        final var task = TaskAPI.start(135045992);
+        final var task = assertDoesNotThrow(() -> TaskAPI.start(135045992));
         final var expected = new Task(135045992, "way/131190351", Instant.parse("2022-08-06T15:23:36.531Z"),
                 Instant.parse("2022-08-06T15:23:36.531Z"), 24092, "",
                 new Point(36.0819446365856, -119.104608317353), task.geometries(),
@@ -65,7 +66,7 @@ class TaskParserTest {
      */
     @Test
     void testTaskParsing134808786() {
-        final var task = TaskAPI.start(134808786);
+        final var task = assertDoesNotThrow(() -> TaskAPI.start(134808786));
         final var expected = new Task(134808786, "node/-103005", Instant.parse("2022-08-04T15:44:15.335Z"), Instant.parse("2022-08-04T15:44:15.335Z"),
                 28467, "", new Point(43.3719671, -82.9782727), task.geometries(),
                 task.cooperativeWork(), TaskStatus.CREATED, null, null, null,
@@ -89,7 +90,7 @@ class TaskParserTest {
 
     @Test
     void testTaskParsing136226437() {
-        final var task = TaskAPI.start(136226437);
+        final var task = assertDoesNotThrow(() -> TaskAPI.start(136226437));
         final var expected = new Task(136226437L, "861207014_way_1", Instant.parse("2022-09-15T18:50:39.354Z"), Instant.parse("2022-10-18T03:19:56.028Z"), 27887, "", new Point(39.082404, -108.4962538), task.geometries(), task.cooperativeWork(), TaskStatus.TOO_HARD, Instant.parse("2022-10-18T03:19:56.028Z"), 923162L, 11197L, new TaskReviewFields(1, 11197L, 9724L, Instant.parse("2022-10-18T07:09:14.455Z"), null, null, null, Instant.parse("2022-10-18T07:08:52.469Z"), null, null), 0, -1L, null, null, false, null, "");
         assertRecordsEqual(expected, task);
     }

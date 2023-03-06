@@ -6,10 +6,12 @@ import static org.openstreetmap.josm.plugins.maproulette.gui.task.current.Curren
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -31,6 +33,7 @@ import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.Tagged;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.JosmEditorPane;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
@@ -45,7 +48,9 @@ import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedTask;
 import org.openstreetmap.josm.plugins.maproulette.gui.TagChangeTable;
 import org.openstreetmap.josm.plugins.maproulette.gui.layer.MapRouletteClusteredPointLayer;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -84,10 +89,18 @@ public final class EarlyUploadHook implements UploadHook {
                 .filter(p -> getPrimitiveId(p) != null).collect(Collectors.groupingBy(EarlyUploadHook::getPrimitiveId));
         final var possiblyDone = ids.stream().filter(id -> tasks.containsKey(id.getUniqueId()))
                 .collect(Collectors.toMap(PrimitiveId::getUniqueId, p -> p));
+        final var exceptionList = new ArrayList<Exception>();
         final var possibleTasks = tasks.entrySet().stream().filter(t -> possiblyDone.containsKey(t.getKey()))
                 .map(Map.Entry::getValue).flatMap(Collection::stream).mapToLong(TaskClusteredPoint::id)
-                .filter(id -> ModifiedObjects.getModifiedTask(id) == null).mapToObj(TaskAPI::get)
-                .collect(Collectors.toSet());
+                .filter(id -> ModifiedObjects.getModifiedTask(id) == null).mapToObj(id -> {
+                    try {
+                        return TaskAPI.get(id);
+                    } catch (IOException e) {
+                        Logging.trace(e);
+                        exceptionList.add(e);
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toSet());
         ConditionalOptionPaneUtil.startBulkOperation(PREF_CHECK_IF_FINISHED);
         for (var task : possibleTasks) {
             if (ids.containsAll(TaskPrimitives.getPrimitiveIds(task))) {
@@ -103,6 +116,7 @@ public final class EarlyUploadHook implements UploadHook {
                 }
             }
         }
+        GuiHelper.runInEDT(() -> exceptionList.forEach(ExceptionDialogUtil::explainException));
         ConditionalOptionPaneUtil.endBulkOperation(PREF_CHECK_IF_FINISHED);
         return UploadHook.super.checkUpload(apiDataSet);
     }
@@ -118,10 +132,14 @@ public final class EarlyUploadHook implements UploadHook {
         }
         if (toParse.length() <= MAX_LONG_STRING_LENGTH + 6 && NUMBER_PREDICATE.test(toParse)
                 && toParse.endsWith("000000")) {
-            final var challenge = ChallengeCache.challenge(point.parentId());
-            if (challenge.general().checkinComment() != null
-                    && challenge.general().checkinComment().contains("#AtlasCheck")) {
-                return Long.parseLong(toParse.substring(0, toParse.length() - 6));
+            try {
+                final var challenge = ChallengeCache.challenge(point.parentId());
+                if (challenge.general().checkinComment() != null
+                        && challenge.general().checkinComment().contains("#AtlasCheck")) {
+                    return Long.parseLong(toParse.substring(0, toParse.length() - 6));
+                }
+            } catch (IOException ioException) {
+                ExceptionDialogUtil.explainException(ioException);
             }
         }
         if (toParse.length() <= MAX_LONG_STRING_LENGTH && NUMBER_PREDICATE.test(toParse)) {
@@ -200,12 +218,16 @@ public final class EarlyUploadHook implements UploadHook {
                 tagBuilder.append(';');
             }
             tagBuilder.append(entry.task().id());
-            final var challengeGeneral = ChallengeCache.challenge(entry.task().parentId()).general();
-            if (!Utils.isBlank(challengeGeneral.checkinComment())) {
-                changesetComments.add(challengeGeneral.checkinComment());
-            }
-            if (!Utils.isBlank(challengeGeneral.checkinSource())) {
-                sourceComments.add(challengeGeneral.checkinSource());
+            try {
+                final var challengeGeneral = ChallengeCache.challenge(entry.task().parentId()).general();
+                if (!Utils.isBlank(challengeGeneral.checkinComment())) {
+                    changesetComments.add(challengeGeneral.checkinComment());
+                }
+                if (!Utils.isBlank(challengeGeneral.checkinSource())) {
+                    sourceComments.add(challengeGeneral.checkinSource());
+                }
+            } catch (IOException ioException) {
+                ExceptionDialogUtil.explainException(ioException);
             }
         }
 

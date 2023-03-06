@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.maproulette.gui;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ class MRGuiHelperTest {
 
     @Test
     void testGetInstructionTextMustache() {
-        final var task = TaskAPI.get(147197178);
+        final var task = assertDoesNotThrow(() -> TaskAPI.get(147197178));
         final var instructions = MRGuiHelper.getInstructionText(task);
         assertEquals("""
                 <html><ol>

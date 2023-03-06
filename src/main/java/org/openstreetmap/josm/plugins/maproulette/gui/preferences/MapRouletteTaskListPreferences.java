@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.maproulette.gui.preferences;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.Arrays;
 import java.util.Objects;
@@ -23,6 +24,7 @@ import org.openstreetmap.josm.plugins.maproulette.api_caching.ChallengeCache;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.ProjectCache;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.TaskCache;
 import org.openstreetmap.josm.plugins.maproulette.data.IgnoreList;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -34,30 +36,35 @@ public class MapRouletteTaskListPreferences implements SubPreferenceSetting {
 
     @Override
     public void addGui(PreferenceTabbedPane gui) {
-        final var pane = new HideableTabbedPane();
-        final var ignoredTaskPanel = new JPanel(new GridBagLayout());
-        final var ignoredChallengePanel = new JPanel(new GridBagLayout());
-        ignoredTaskTable = buildTaskTable();
-        ignoredChallengeTable = buildChallengeTable();
-        final var scrollTaskTable = new VerticallyScrollablePanel(new GridBagLayout());
-        final var scrollChallengeTable = new VerticallyScrollablePanel(new GridBagLayout());
-        scrollTaskTable.add(ignoredTaskTable, GBC.eol().fill(GBC.BOTH));
-        scrollChallengeTable.add(ignoredChallengeTable, GBC.eol().fill(GBC.BOTH));
-        ignoredTaskPanel.add(ignoredTaskTable.getTableHeader(), GBC.eol().fill(GBC.HORIZONTAL));
-        ignoredTaskPanel.add(scrollTaskTable, GBC.eol().fill(GBC.BOTH));
-        ignoredChallengePanel.add(ignoredChallengeTable.getTableHeader(), GBC.eol().fill(GBC.HORIZONTAL));
-        ignoredChallengePanel.add(scrollChallengeTable, GBC.eol().fill(GBC.BOTH));
-        pane.add(tr("Ignored Tasks"), ignoredTaskPanel);
-        pane.add(tr("Ignored Challenges"), ignoredChallengePanel);
-        getTabPreferenceSetting(gui).addSubTab(this, tr("Task List"), pane, tr("MapRoulette Task List Settings"));
+        try {
+            final var pane = new HideableTabbedPane();
+            final var ignoredTaskPanel = new JPanel(new GridBagLayout());
+            final var ignoredChallengePanel = new JPanel(new GridBagLayout());
+            ignoredTaskTable = buildTaskTable();
+            ignoredChallengeTable = buildChallengeTable();
+            final var scrollTaskTable = new VerticallyScrollablePanel(new GridBagLayout());
+            final var scrollChallengeTable = new VerticallyScrollablePanel(new GridBagLayout());
+            scrollTaskTable.add(ignoredTaskTable, GBC.eol().fill(GBC.BOTH));
+            scrollChallengeTable.add(ignoredChallengeTable, GBC.eol().fill(GBC.BOTH));
+            ignoredTaskPanel.add(ignoredTaskTable.getTableHeader(), GBC.eol().fill(GBC.HORIZONTAL));
+            ignoredTaskPanel.add(scrollTaskTable, GBC.eol().fill(GBC.BOTH));
+            ignoredChallengePanel.add(ignoredChallengeTable.getTableHeader(), GBC.eol().fill(GBC.HORIZONTAL));
+            ignoredChallengePanel.add(scrollChallengeTable, GBC.eol().fill(GBC.BOTH));
+            pane.add(tr("Ignored Tasks"), ignoredTaskPanel);
+            pane.add(tr("Ignored Challenges"), ignoredChallengePanel);
+            getTabPreferenceSetting(gui).addSubTab(this, tr("Task List"), pane, tr("MapRoulette Task List Settings"));
+        } catch (IOException ioException) {
+            ExceptionDialogUtil.explainException(ioException);
+        }
     }
 
     /**
      * Build a task table
      *
      * @return The task table
+     * @throws IOException if there was a problem communicating with the server
      */
-    private static JTable buildTaskTable() {
+    private static JTable buildTaskTable() throws IOException {
         final var ignoredTasks = IgnoreList.ignoredTasks();
         final var table = buildTable(ignoredTasks.length, tr("Project"), tr("Challenge"), tr("Task Name"),
                 tr("Task ID"), tr("Keep"));
@@ -83,8 +90,9 @@ public class MapRouletteTaskListPreferences implements SubPreferenceSetting {
      * Build a challenge table
      *
      * @return The table with ignored challenges
+     * @throws IOException if there was a problem communicating with the server
      */
-    private static JTable buildChallengeTable() {
+    private static JTable buildChallengeTable() throws IOException {
         final var ignoredChallenges = IgnoreList.ignoredChallenges();
         final var table = buildTable(ignoredChallenges.length, tr("Project"), tr("Challenge Name"), tr("Challenge ID"),
                 tr("Keep"));

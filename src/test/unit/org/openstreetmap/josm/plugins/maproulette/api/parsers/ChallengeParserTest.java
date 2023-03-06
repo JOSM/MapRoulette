@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.openstreetmap.josm.plugins.maproulette.util.RecordAssertion.assertRecordsEqual;
 
 import java.time.Instant;
@@ -23,7 +24,7 @@ import org.openstreetmap.josm.plugins.maproulette.util.MapRouletteConfig;
 class ChallengeParserTest {
     @Test
     void testChallenge15318() {
-        final var challenge = ChallengeAPI.challenge(15318);
+        final var challenge = assertDoesNotThrow(() -> ChallengeAPI.challenge(15318));
         final var expected = new Challenge(15318, "Add direction to Stop - USA Los Angeles Timezone",
                 Instant.parse("2020-11-28T18:22:24.399Z"), Instant.parse("2023-01-24T14:21:34.897Z"),
                 "This challenge will show every [highway=stop](https://wiki.openstreetmap.org/wiki/Tag:highway%3Dstop) without [direction=*](https://wiki.openstreetmap.org/wiki/Key:direction). Your goal is to add tag \"direction\" with value: \"forward\", \"backward\" or \"both\" for every stop. Read article [highway=stop](https://wiki.openstreetmap.org/wiki/Tag:highway%3Dstop) to know how to map.\n\n#### Overpass query\n[All my queries](https://wiki.openstreetmap.org/wiki/User:Binnette/OverpassQueries)\n\n#### About Binnette\n[Twitch](https://www.twitch.tv/binnettetv) - [Twitter](https://twitter.com/BinnetteBin) - [Wiki](https://wiki.openstreetmap.org/wiki/User:Binnette)",

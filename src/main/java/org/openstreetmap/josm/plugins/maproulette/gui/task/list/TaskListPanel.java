@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +51,7 @@ import org.openstreetmap.josm.plugins.maproulette.gui.layer.MapRouletteClustered
 import org.openstreetmap.josm.plugins.maproulette.gui.preferences.MapRoulettePreferences;
 import org.openstreetmap.josm.plugins.maproulette.gui.task.current.CurrentTaskPanel;
 import org.openstreetmap.josm.plugins.maproulette.gui.widgets.DefaultPanelListCellRenderer;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -161,7 +163,12 @@ public final class TaskListPanel extends ToggleDialog
         if (point instanceof ClusteredPoint clusteredPoint) {
             return clusteredPoint.parentName();
         } else if (point instanceof Task task) {
-            return ChallengeCache.challenge(task.parentId()).name();
+            try {
+                return ChallengeCache.challenge(task.parentId()).name();
+            } catch (IOException ioException) {
+                ExceptionDialogUtil.explainException(ioException);
+            }
+            return tr("Unknown");
         } else {
             throw new IllegalArgumentException("Unknown class type: " + point.getClass());
         }

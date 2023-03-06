@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette;
 
+import java.io.IOException;
+
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -16,6 +18,7 @@ import org.openstreetmap.josm.plugins.maproulette.gui.download.MapRouletteDownlo
 import org.openstreetmap.josm.plugins.maproulette.gui.preferences.MapRoulettePreferences;
 import org.openstreetmap.josm.plugins.maproulette.io.upload.EarlyUploadHook;
 import org.openstreetmap.josm.plugins.maproulette.io.upload.LateUploadHook;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 
 /**
  * The POJO entry point
@@ -47,7 +50,11 @@ public class MapRoulette extends Plugin {
             newFrame.addToggleDialog(new TaskListPanel());
         } else {
             for (var task : ModifiedObjects.getLockedTasks()) {
-                TaskAPI.release(task.id());
+                try {
+                    TaskAPI.release(task.id());
+                } catch (IOException e) {
+                    ExceptionDialogUtil.explainException(e);
+                }
             }
         }
     }

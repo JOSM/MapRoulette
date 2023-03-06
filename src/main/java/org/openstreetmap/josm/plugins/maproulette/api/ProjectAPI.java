@@ -4,7 +4,6 @@ package org.openstreetmap.josm.plugins.maproulette.api;
 import static org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig.getBaseUrl;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 
 import javax.annotation.Nonnull;
 
@@ -30,14 +29,13 @@ public final class ProjectAPI {
      *
      * @param id The project to get
      * @return The parsed project object
+     * @throws IOException if there was a problem communicating with the server
      */
     @Nonnull
-    public static Project get(long id) {
+    public static Project get(long id) throws IOException {
         final var client = HttpClientUtils.get(getBaseUrl() + PROJECT + "/" + id);
         try (var inputstream = client.connect().getContent()) {
             return ProjectParser.parse(inputstream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }

@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.data;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.plugins.maproulette.api.model.ChallengeExtra;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.ChallengeCache;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -56,16 +58,19 @@ public final class TaskPrimitives {
     @Nonnull
     public static Map<PrimitiveId, IPrimitive> getPrimitiveIdMap(@Nullable Task task) {
         if (task != null) {
-            final var challenge = ChallengeCache.challenge(task.parentId());
-            final var property = challenge.extra().osmIdProperty();
-            if (!Utils.isBlank(property)) {
-                return getPrimitiveIdMap(task, property);
-            } else {
-                for (var defaultProperty : ChallengeExtra.DEFAULT_OSM_ID_PROPERTIES) {
-                    final var primitives = getPrimitiveIdMap(task, defaultProperty);
-                    if (!primitives.isEmpty()) {
-                        return primitives;
-                    }
+            try {
+                final var challenge = ChallengeCache.challenge(task.parentId());
+                final var property = challenge.extra().osmIdProperty();
+                if (!Utils.isBlank(property)) {
+                    return getPrimitiveIdMap(task, property);
+                }
+            } catch (IOException ioException) {
+                ExceptionDialogUtil.explainException(ioException);
+            }
+            for (var defaultProperty : ChallengeExtra.DEFAULT_OSM_ID_PROPERTIES) {
+                final var primitives = getPrimitiveIdMap(task, defaultProperty);
+                if (!primitives.isEmpty()) {
+                    return primitives;
                 }
             }
         }

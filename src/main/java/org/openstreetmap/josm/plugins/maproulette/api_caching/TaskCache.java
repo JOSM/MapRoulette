@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api_caching;
 
+import java.io.IOException;
+
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.openstreetmap.josm.data.cache.JCSCacheManager;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
@@ -26,9 +28,15 @@ public final class TaskCache {
      *
      * @param id The task id
      * @return The cached task
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Task get(long id) {
-        return CACHE.get(id, () -> TaskAPI.get(id));
+    public static Task get(long id) throws IOException {
+        if (CACHE.get(id) == null) {
+            synchronized (CACHE) {
+                CACHE.put(id, TaskAPI.get(id));
+            }
+        }
+        return CACHE.get(id);
     }
 
     /**

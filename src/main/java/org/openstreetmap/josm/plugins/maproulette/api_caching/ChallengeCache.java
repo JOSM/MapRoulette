@@ -1,10 +1,13 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api_caching;
 
+import java.io.IOException;
+
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.openstreetmap.josm.data.cache.JCSCacheManager;
 import org.openstreetmap.josm.plugins.maproulette.api.ChallengeAPI;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Challenge;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A cache for challenge objects, which don't change often. Use this if you don't need the absolute freshest data.
@@ -29,8 +32,13 @@ public final class ChallengeCache {
      * @return {@code true} if the challenge is hidden and its tasks should not be shown
      */
     public static boolean isHidden(long id) {
-        final var challenge = challenge(id);
-        return challenge.deleted();
+        try {
+            final var challenge = challenge(id);
+            return challenge.deleted();
+        } catch (IOException ioException) {
+            Logging.trace(ioException);
+            return false;
+        }
     }
 
     /**
@@ -38,8 +46,18 @@ public final class ChallengeCache {
      *
      * @param id The challenge id
      * @return The cached challenge
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Challenge challenge(long id) {
-        return CACHE.get(id, () -> ChallengeAPI.challenge(id));
+    public static Challenge challenge(long id) throws IOException {
+        if (CACHE.get(id) != null) {
+            return CACHE.get(id);
+        }
+        synchronized (CACHE) {
+            if (CACHE.get(id) == null) {
+                final var challenge = ChallengeAPI.challenge(id);
+                CACHE.put(id, challenge);
+            }
+        }
+        return CACHE.get(id);
     }
 }

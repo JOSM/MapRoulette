@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import org.openstreetmap.josm.plugins.maproulette.data.ApplyOscChange;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedTask;
 import org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -121,6 +123,8 @@ class TaskStatusAction extends CurrentTaskPanel.InnerAction {
                             handleTask(TaskCache.get(toMark.id()));
                         }
                     }
+                } catch (IOException ioException) {
+                    ExceptionDialogUtil.explainException(ioException);
                 } finally {
                     ConditionalOptionPaneUtil.endBulkOperation("maproulette.task.feedback");
                 }
@@ -192,16 +196,21 @@ class TaskStatusAction extends CurrentTaskPanel.InnerAction {
     private ModifiedTask getModifiedTask(Task task) {
         final var panel = new JPanel(new GridBagLayout());
         final var comment = new JosmTextArea();
-        final var challenge = ChallengeCache.challenge(task.parentId());
         final var tagBox = new AutoCompComboBox<String>();
         final var reviewRequested = new QuadStateCheckBox(tr("Request Review"), QuadStateCheckBox.State.UNSET,
                 QuadStateCheckBox.State.SELECTED, QuadStateCheckBox.State.UNSET, QuadStateCheckBox.State.NOT_SELECTED);
         comment.setRows(4);
         comment.setColumns(25);
-        if (challenge.extra().preferredTags() != null) {
-            tagBox.getModel().addAllElements(Arrays.asList(challenge.extra().preferredTags().split(",")));
+        try {
+            final var challenge = ChallengeCache.challenge(task.parentId());
+            if (challenge.extra().preferredTags() != null) {
+                tagBox.getModel().addAllElements(Arrays.asList(challenge.extra().preferredTags().split(",")));
+            }
+            tagBox.setEditable(!challenge.extra().limitTags());
+        } catch (IOException ioException) {
+            tagBox.setEditable(true);
+            ExceptionDialogUtil.explainException(ioException);
         }
-        tagBox.setEditable(!challenge.extra().limitTags());
         panel.add(comment, GBC.eol().fill(GBC.BOTH));
         panel.add(tagBox, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(reviewRequested, GBC.eol().anchor(GBC.LINE_START));

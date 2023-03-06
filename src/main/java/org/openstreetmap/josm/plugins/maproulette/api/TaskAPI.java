@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfi
 import static org.openstreetmap.josm.plugins.maproulette.util.HttpClientUtils.put;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
@@ -59,6 +58,7 @@ public final class TaskAPI {
      * @param includeGeometries include the geometries
      * @param includeTags       include the tags
      * @return The collection of tasks
+     * @throws IOException if there was a problem communicating with the server
      */
     public static ClusteredPoint[] box(double minLon, double minLat, double maxLon, double maxLat, int limit, int page,
             boolean excludeLocked, String sort, String order, boolean includeTotal, boolean includeGeometries,
@@ -102,13 +102,12 @@ public final class TaskAPI {
      *
      * @param task The task to get
      * @return The task for the id
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Task get(long task) {
+    public static Task get(long task) throws IOException {
         final var client = HttpClientUtils.get(getBaseUrl() + TASK + "/" + task);
         try (var inputstream = client.connect().getContent()) {
             return (Task) TaskParser.parseTask(inputstream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -119,13 +118,12 @@ public final class TaskAPI {
      *
      * @param task The task to start
      * @return The updated task
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Task start(long task) {
+    public static Task start(long task) throws IOException {
         final var client = HttpClientUtils.get(getBaseUrl() + TASK + "/" + task + "/start");
         try (var inputstream = client.connect().getContent()) {
             return (Task) TaskParser.parseTask(inputstream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -136,13 +134,12 @@ public final class TaskAPI {
      *
      * @param task The task to unlock
      * @return The unlocked task
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Task release(long task) {
+    public static Task release(long task) throws IOException {
         final var client = HttpClientUtils.get(getBaseUrl() + TASK + "/" + task + "/release");
         try (var inputstream = client.connect().getContent()) {
             return (Task) TaskParser.parseTask(inputstream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -153,13 +150,12 @@ public final class TaskAPI {
      *
      * @param task The task to update
      * @return The updated task
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Task refreshLock(long task) {
+    public static Task refreshLock(long task) throws IOException {
         final var client = HttpClientUtils.get(getBaseUrl() + TASK + "/" + task + "/refreshLock");
         try (var inputstream = client.connect().getContent()) {
             return (Task) TaskParser.parseTask(inputstream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -170,13 +166,12 @@ public final class TaskAPI {
      *
      * @param task the task to update the changeset for
      * @return The updated task
+     * @throws IOException if there was a problem communicating with the server
      */
-    public static Task changeset(long task) {
+    public static Task changeset(long task) throws IOException {
         final var client = put(getBaseUrl() + TASK + "/" + task + "/changeset", Collections.emptyMap());
         try (var inputstream = client.connect().getContent()) {
             return (Task) TaskParser.parseTask(inputstream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
@@ -192,9 +187,10 @@ public final class TaskAPI {
      * @param requestReview Request review (or not), overrides user settings
      * @param completionResponses The completion responses
      * @return {@code true} if the task update was successful
+     * @throws IOException if there was a problem communicating with the server
      */
     public static boolean updateStatus(long task, TaskStatus status, String comment, String tags, Boolean requestReview,
-            Map<String, Option> completionResponses) {
+            Map<String, Option> completionResponses) throws IOException {
         Map<String, String> query = new TreeMap<>();
         if (comment != null && !comment.isBlank()) {
             query.put("comment", comment);
@@ -224,8 +220,6 @@ public final class TaskAPI {
                 Logging.info(content);
             }
             return response.getResponseCode() == 204;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             client.disconnect();
         }
