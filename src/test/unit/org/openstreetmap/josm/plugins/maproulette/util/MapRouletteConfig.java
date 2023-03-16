@@ -9,6 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.common.FileSource;
@@ -34,8 +37,21 @@ import org.openstreetmap.josm.tools.JosmRuntimeException;
 @OsmUser
 public @interface MapRouletteConfig {
     class Extension extends WireMockExtension {
+        /**
+         * Get the directory for test resources. Needed since Jenkins will run in one directory up
+         * @return The base directory for test resources.
+         */
+        private static String getDirectory() {
+            final var basePath = Paths.get("src", "test", "resources");
+            final var maproulette = Path.of("maproulette");
+            if (Files.isDirectory(maproulette) && Files.isDirectory(maproulette.resolve(basePath))) {
+                return maproulette.resolve(basePath).toString();
+            }
+            return basePath.toString();
+        }
+
         public Extension() {
-            super(extensionOptions().options(options().dynamicPort().usingFilesUnderDirectory("src/test/resources")
+            super(extensionOptions().options(options().dynamicPort().usingFilesUnderDirectory(getDirectory())
                     .extensions(new MapRouletteExtension())));
         }
 
