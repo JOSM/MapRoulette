@@ -74,7 +74,7 @@ class TaskStatusAction extends CurrentTaskPanel.InnerAction {
     TaskStatusAction(TaskStatus status, Supplier<Task> currentTaskProvider,
             Supplier<HTMLDocument> currentDocumentProvider) {
         super(status.description(), getIconName(status), status.description(),
-                Shortcut.registerShortcut("maproulette:" + status.name().toLowerCase(Locale.ENGLISH),
+                Shortcut.registerShortcut(/* NO-SHORTCUT */ "maproulette:" + status.name().toLowerCase(Locale.ENGLISH),
                         tr("MapRoulette: Mark Task as {0}", status.description()), KeyEvent.CHAR_UNDEFINED,
                         Shortcut.NONE),
                 false);
