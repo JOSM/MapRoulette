@@ -67,9 +67,9 @@ public class IgnoreAction extends JosmAction {
      * The ignore type
      */
     public enum IgnoreType {
-        /* SHORTCUT("maproulette:ignore.task", "MapRoulette: Ignore Task", KeyEvent.CHAR_UNDEFINED, Shortcut.NONE) */
+        /* SHORTCUT(MapRoulette: Ignore Task, maproulette:ignore.task, NONE, UNDEFINED) */
         IGNORE_TASK(marktr("Ignore Task")),
-        /* SHORTCUT("maproulette:ignore.challenge", "MapRoulette: Ignore Challenge", KeyEvent.CHAR_UNDEFINED, Shortcut.NONE) */
+        /* SHORTCUT(MapRoulette: Ignore Challenge, maproulette:ignore.challenge, NONE, UNDEFINED) */
         IGNORE_CHALLENGE(marktr("Ignore Challenge"));
 
         private final String buttonText;

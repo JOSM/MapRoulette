@@ -56,19 +56,19 @@ public enum TaskStatus {
     public String description() {
         return switch (this) {
         case CREATED -> tr("Created");
-        /* SHORTCUT("maproulette:fixed", "MapRoulette: Fixed", KeyEvent.CHAR_UNDEFINED, Shortcut.NONE) */
+        /* SHORTCUT(MapRoulette: Fixed, maproulette:fixed, NONE, UNDEFINED) */
         case FIXED -> tr("Fixed");
         case DELETED -> tr("Deleted");
-        /* SHORTCUT("maproulette:skipped", "MapRoulette: Skipped", KeyEvent.CHAR_UNDEFINED, Shortcut.NONE) */
+        /* SHORTCUT(MapRoulette: Skipped, maproulette:skipped, NONE, UNDEFINED) */
         case SKIPPED -> tr("Skipped");
         case ANSWERED -> tr("Answered");
         case DISABLED -> tr("Disabled");
-        /* SHORTCUT("maproulette:too_hard", "MapRoulette: Too Hard / Cannot see", KeyEvent.CHAR_UNDEFINED, Shortcut.NONE) */
+        /* SHORTCUT(MapRoulette: Too Hard / Cannot see, maproulette:too_hard, NONE, UNDEFINED) */
         case TOO_HARD -> tr("Too Hard / Cannot see");
         case VALIDATED -> tr("Validated");
-        /* SHORTCUT("maproulette:already_fixed", "MapRoulette: Mark Task as Already Fixed / Not an Issue", KeyEvent.CHAR_UNDEFINED, Shortcut.NONE) */
+        /* SHORTCUT(MapRoulette: Mark Task as Already Fixed / Not an Issue, maproulette:already_fixed, NONE, UNDEFINED) */
         case ALREADY_FIXED -> tr("Already Fixed / Not an Issue");
-        /* SHORTCUT("maproulette:false_positive", "MapRoulette: Mark Task as False Positive", KeyEvent.CHAR_UNDEFINED, Shortcut.NONE) */
+        /* SHORTCUT(MapRoulette: Mark Task as False Positive, maproulette:false_positive, NONE, UNDEFINED) */
         case FALSE_POSITIVE -> tr("False Positive");
         };
     }
