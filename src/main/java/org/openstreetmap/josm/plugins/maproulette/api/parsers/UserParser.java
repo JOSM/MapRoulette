@@ -2,7 +2,7 @@
 package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 
 import javax.annotation.Nullable;
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 import org.openstreetmap.josm.plugins.maproulette.api.model.PointReview;
 import org.openstreetmap.josm.plugins.maproulette.api.model.PublicUser;
@@ -11,6 +11,8 @@ import org.openstreetmap.josm.plugins.maproulette.api.model.PublicUser;
  * A parser for user objects
  */
 final class UserParser {
+    private UserParser() { /* Hide constructor */ }
+
     /**
      * Parse a {@link PointReview} object
      *

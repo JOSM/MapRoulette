@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 import org.openstreetmap.josm.plugins.maproulette.api.UnauthorizedException;
 

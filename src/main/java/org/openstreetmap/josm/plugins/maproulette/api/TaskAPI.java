@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.json.Json;
+import jakarta.json.Json;
 import javax.swing.text.html.Option;
 
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
@@ -36,7 +36,7 @@ public final class TaskAPI {
     private static final String TASKS = TASK + "s";
 
     /**
-     * Don't allow isntantiation of this utility class
+     * Don't allow instantiation of this utility class
      */
     private TaskAPI() {
         // Hide constructor

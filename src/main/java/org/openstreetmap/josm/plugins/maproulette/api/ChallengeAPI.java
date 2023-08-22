@@ -16,12 +16,12 @@ import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.json.Json;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.json.JsonStructure;
-import javax.json.JsonValue;
+import jakarta.json.Json;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
 import org.openstreetmap.josm.plugins.maproulette.api.enums.Priority;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Challenge;

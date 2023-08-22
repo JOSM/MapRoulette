@@ -4,9 +4,9 @@ package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 import static org.openstreetmap.josm.plugins.maproulette.api.parsers.ParsingUtils.optionalObject;
 
 import javax.annotation.Nonnull;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
 import org.openstreetmap.josm.plugins.maproulette.api.model.Grant;
 import org.openstreetmap.josm.plugins.maproulette.api.model.GrantTarget;
@@ -29,7 +29,7 @@ final class GrantParser {
     @Nonnull
     static Grant[] parse(JsonArray multiple) {
         final var grants = new Grant[multiple.size()];
-        for (int i = 0; i < grants.length; i++) {
+        for (var i = 0; i < grants.length; i++) {
             final var tObj = multiple.get(i);
             if (tObj.getValueType() != JsonValue.ValueType.OBJECT) {
                 throw new IllegalArgumentException("Bad Grant array: " + multiple);

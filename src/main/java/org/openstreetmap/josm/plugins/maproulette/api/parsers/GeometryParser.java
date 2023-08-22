@@ -4,9 +4,9 @@ package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;

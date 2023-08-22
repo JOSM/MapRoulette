@@ -6,8 +6,8 @@ import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
 
 /**
  * Utils to avoid some common patterns (e.g., object.containsKey("foo") ? object.getJsonNumber("foo").longValue() : 0)

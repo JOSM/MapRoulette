@@ -5,8 +5,8 @@ import static org.openstreetmap.josm.plugins.maproulette.api.parsers.ParsingUtil
 import static org.openstreetmap.josm.plugins.maproulette.api.parsers.ParsingUtils.optionalInteger;
 import static org.openstreetmap.josm.plugins.maproulette.api.parsers.ParsingUtils.optionalObject;
 
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
 
 import org.openstreetmap.josm.plugins.maproulette.api.model.PointReview;
 

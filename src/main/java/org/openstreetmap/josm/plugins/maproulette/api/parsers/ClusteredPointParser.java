@@ -10,10 +10,10 @@ import java.time.Instant;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-import javax.json.stream.JsonParser;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
+import jakarta.json.stream.JsonParser;
 
 import org.openstreetmap.josm.plugins.maproulette.api.enums.Difficulty;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;

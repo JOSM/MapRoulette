@@ -2,7 +2,7 @@
 package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 
 import javax.annotation.Nullable;
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 import org.openstreetmap.josm.plugins.maproulette.api.model.Point;
 

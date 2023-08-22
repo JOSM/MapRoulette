@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 import javax.annotation.Nonnull;
-import javax.json.Json;
-import javax.json.JsonNumber;
-import javax.json.JsonReader;
-import javax.json.JsonStructure;
-import javax.json.JsonValue;
+import jakarta.json.Json;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
 import org.openstreetmap.josm.plugins.maproulette.api.model.TaskBundle;
 

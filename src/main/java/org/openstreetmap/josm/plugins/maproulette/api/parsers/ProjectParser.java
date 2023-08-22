@@ -7,8 +7,8 @@ import static org.openstreetmap.josm.plugins.maproulette.api.parsers.ParsingUtil
 import java.io.InputStream;
 
 import javax.annotation.Nonnull;
-import javax.json.Json;
-import javax.json.JsonValue;
+import jakarta.json.Json;
+import jakarta.json.JsonValue;
 
 import org.openstreetmap.josm.plugins.maproulette.api.model.Project;
 
