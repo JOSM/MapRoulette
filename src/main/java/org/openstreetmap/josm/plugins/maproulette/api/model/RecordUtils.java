@@ -14,7 +14,6 @@ import jakarta.annotation.Nonnull;
  * Utils for {@link Record} classes with array fields
  */
 final class RecordUtils {
-    private static final String UNKNOWN_TYPE = "Unknown primitive type: ";
     private RecordUtils() {
         // Hide constructor
     }
@@ -40,26 +39,22 @@ final class RecordUtils {
     }
 
     private static boolean arrayEquals(Class<?> type, Object first, Object second) {
-        if (type.isPrimitive()) {
-            if (int.class.equals(type)) {
-                return Arrays.equals((int[]) first, (int[]) second);
-            } else if (byte.class.equals(type)) {
-                return Arrays.equals((byte[]) first, (byte[]) second);
-            } else if (short.class.equals(type)) {
-                return Arrays.equals((short[]) first, (short[]) second);
-            } else if (long.class.equals(type)) {
-                return Arrays.equals((long[]) first, (long[]) second);
-            } else if (float.class.equals(type)) {
-                return Arrays.equals((float[]) first, (float[]) second);
-            } else if (double.class.equals(type)) {
-                return Arrays.equals((double[]) first, (double[]) second);
-            } else if (boolean.class.equals(type)) {
-                return Arrays.equals((boolean[]) first, (boolean[]) second);
-            } else if (char.class.equals(type)) {
-                return Arrays.equals((char[]) first, (char[]) second);
-            } else {
-                throw new JosmRuntimeException(UNKNOWN_TYPE + type);
-            }
+        if (int[].class.equals(type)) {
+            return Arrays.equals((int[]) first, (int[]) second);
+        } else if (byte[].class.equals(type)) {
+            return Arrays.equals((byte[]) first, (byte[]) second);
+        } else if (short[].class.equals(type)) {
+            return Arrays.equals((short[]) first, (short[]) second);
+        } else if (long[].class.equals(type)) {
+            return Arrays.equals((long[]) first, (long[]) second);
+        } else if (float[].class.equals(type)) {
+            return Arrays.equals((float[]) first, (float[]) second);
+        } else if (double[].class.equals(type)) {
+            return Arrays.equals((double[]) first, (double[]) second);
+        } else if (boolean[].class.equals(type)) {
+            return Arrays.equals((boolean[]) first, (boolean[]) second);
+        } else if (char[].class.equals(type)) {
+            return Arrays.equals((char[]) first, (char[]) second);
         } else {
             return Arrays.equals((Object[]) first, (Object[]) second);
         }
@@ -86,26 +81,22 @@ final class RecordUtils {
     }
 
     private static int arrayHashCode(Class<?> type, Object field) {
-        if (type.isPrimitive()) {
-            if (int.class.equals(type)) {
-                return Arrays.hashCode((int[]) field);
-            } else if (byte.class.equals(type)) {
-                return Arrays.hashCode((byte[]) field);
-            } else if (short.class.equals(type)) {
-                return Arrays.hashCode((short[]) field);
-            } else if (long.class.equals(type)) {
-                return Arrays.hashCode((long[]) field);
-            } else if (float.class.equals(type)) {
-                return Arrays.hashCode((float[]) field);
-            } else if (double.class.equals(type)) {
-                return Arrays.hashCode((double[]) field);
-            } else if (boolean.class.equals(type)) {
-                return Arrays.hashCode((boolean[]) field);
-            } else if (char.class.equals(type)) {
-                return Arrays.hashCode((char[]) field);
-            } else {
-                throw new JosmRuntimeException(UNKNOWN_TYPE + type);
-            }
+        if (int[].class.equals(type)) {
+            return Arrays.hashCode((int[]) field);
+        } else if (byte[].class.equals(type)) {
+            return Arrays.hashCode((byte[]) field);
+        } else if (short[].class.equals(type)) {
+            return Arrays.hashCode((short[]) field);
+        } else if (long[].class.equals(type)) {
+            return Arrays.hashCode((long[]) field);
+        } else if (float[].class.equals(type)) {
+            return Arrays.hashCode((float[]) field);
+        } else if (double[].class.equals(type)) {
+            return Arrays.hashCode((double[]) field);
+        } else if (boolean[].class.equals(type)) {
+            return Arrays.hashCode((boolean[]) field);
+        } else if (char[].class.equals(type)) {
+            return Arrays.hashCode((char[]) field);
         } else {
             return Arrays.hashCode((Object[]) field);
         }
@@ -136,26 +127,22 @@ final class RecordUtils {
     }
 
     private static String getArrayString(Class<?> type, Object field) {
-        if (type.isPrimitive()) {
-            if (int.class.equals(type)) {
-                return Arrays.toString((int[]) field);
-            } else if (byte.class.equals(type)) {
-                return Arrays.toString((byte[]) field);
-            } else if (short.class.equals(type)) {
-                return Arrays.toString((short[]) field);
-            } else if (long.class.equals(type)) {
-                return Arrays.toString((long[]) field);
-            } else if (float.class.equals(type)) {
-                return Arrays.toString((float[]) field);
-            } else if (double.class.equals(type)) {
-                return Arrays.toString((double[]) field);
-            } else if (boolean.class.equals(type)) {
-                return Arrays.toString((boolean[]) field);
-            } else if (char.class.equals(type)) {
-                return Arrays.toString((char[]) field);
-            } else {
-                throw new JosmRuntimeException(UNKNOWN_TYPE + type);
-            }
+        if (int[].class.equals(type)) {
+            return Arrays.toString((int[]) field);
+        } else if (byte[].class.equals(type)) {
+            return Arrays.toString((byte[]) field);
+        } else if (short[].class.equals(type)) {
+            return Arrays.toString((short[]) field);
+        } else if (long[].class.equals(type)) {
+            return Arrays.toString((long[]) field);
+        } else if (float[].class.equals(type)) {
+            return Arrays.toString((float[]) field);
+        } else if (double[].class.equals(type)) {
+            return Arrays.toString((double[]) field);
+        } else if (boolean[].class.equals(type)) {
+            return Arrays.toString((boolean[]) field);
+        } else if (char[].class.equals(type)) {
+            return Arrays.toString((char[]) field);
         } else {
             return Arrays.toString((Object[]) field);
         }
