@@ -4,13 +4,13 @@ package org.openstreetmap.josm.plugins.maproulette.api.model;
 import java.io.IOException;
 import java.time.Instant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.Difficulty;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 
 /**

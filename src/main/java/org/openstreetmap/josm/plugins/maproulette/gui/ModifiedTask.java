@@ -4,12 +4,13 @@ package org.openstreetmap.josm.plugins.maproulette.gui;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.text.html.Option;
 
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Information for a modified task

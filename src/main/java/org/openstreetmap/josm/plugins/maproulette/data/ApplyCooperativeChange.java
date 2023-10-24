@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -20,6 +18,9 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.maproulette.api.model.OSMChange;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Apply a cooperative change

@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A class holding modified objects

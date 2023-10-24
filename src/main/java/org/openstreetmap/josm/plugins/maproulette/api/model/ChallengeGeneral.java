@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api.model;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * General challenge information
@@ -25,4 +25,18 @@ public record ChallengeGeneral(long owner, long parent, String instruction, int 
                                boolean enabled, boolean featured, int cooperativeType, int popularity,
                                String checkinComment, String checkinSource, boolean changesetUrl,
                                @Nullable long[] virtualParents, boolean requiresLocal) {
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ChallengeGeneral other && RecordUtils.equals(this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return RecordUtils.hashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return RecordUtils.toString(this);
+    }
 }

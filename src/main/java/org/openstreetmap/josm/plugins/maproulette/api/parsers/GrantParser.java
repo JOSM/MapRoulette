@@ -3,14 +3,14 @@ package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 
 import static org.openstreetmap.josm.plugins.maproulette.api.parsers.ParsingUtils.optionalObject;
 
-import javax.annotation.Nonnull;
-import jakarta.json.JsonArray;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonValue;
-
 import org.openstreetmap.josm.plugins.maproulette.api.model.Grant;
 import org.openstreetmap.josm.plugins.maproulette.api.model.GrantTarget;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Grantee;
+
+import jakarta.annotation.Nonnull;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
 /**
  * A parser for grants

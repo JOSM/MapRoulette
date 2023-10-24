@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.maproulette.api.model;
 
 import java.time.Instant;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Task review information
@@ -24,4 +24,18 @@ public record TaskReviewFields(@Nullable Integer reviewStatus, @Nullable Long re
                                @Nullable Instant reviewedAt, @Nullable Long metaReviewedBy, @Nullable Integer metaReviewStatus,
                                @Nullable Instant metaReviewedAt, @Nullable Instant reviewStartedAt, @Nullable Long reviewClaimedBy,
                                @Nullable Instant reviewClaimedAt, long... additionalReviewers) {
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof TaskReviewFields other && RecordUtils.equals(this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return RecordUtils.hashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return RecordUtils.toString(this);
+    }
 }

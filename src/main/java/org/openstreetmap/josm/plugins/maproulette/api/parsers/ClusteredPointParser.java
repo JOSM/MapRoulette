@@ -9,15 +9,15 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
+import org.openstreetmap.josm.plugins.maproulette.api.enums.Difficulty;
+import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
+import org.openstreetmap.josm.plugins.maproulette.api.model.ClusteredPoint;
+
+import jakarta.annotation.Nullable;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonParser;
-
-import org.openstreetmap.josm.plugins.maproulette.api.enums.Difficulty;
-import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
-import org.openstreetmap.josm.plugins.maproulette.api.model.ClusteredPoint;
 
 /**
  * Parser for {@link org.openstreetmap.josm.plugins.maproulette.api.model.ClusteredPoint}

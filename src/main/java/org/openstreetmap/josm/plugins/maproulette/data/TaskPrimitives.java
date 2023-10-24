@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
@@ -21,6 +18,9 @@ import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.ChallengeCache;
 import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.Utils;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A class for getting the primitives for a task

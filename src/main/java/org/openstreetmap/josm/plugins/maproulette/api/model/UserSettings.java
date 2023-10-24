@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api.model;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * The settings for the user
@@ -27,4 +27,19 @@ public record UserSettings(@Nullable Integer defaultEditor, @Nullable Integer de
                            @Nullable Boolean isReviewer, @Nullable Boolean allowFollowing,
                            @Nullable Integer theme, CustomBasemap[] customBasemaps,
                            @Nullable Boolean seeTagFixSuggestions) {
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof UserSettings other && RecordUtils.equals(this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return RecordUtils.hashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return RecordUtils.toString(this);
+    }
 }

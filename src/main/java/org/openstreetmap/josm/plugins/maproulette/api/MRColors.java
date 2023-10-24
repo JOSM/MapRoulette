@@ -3,10 +3,10 @@ package org.openstreetmap.josm.plugins.maproulette.api;
 
 import java.awt.Color;
 
-import javax.annotation.Nullable;
-
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
+
+import jakarta.annotation.Nullable;
 
 /**
  * A class for getting colors

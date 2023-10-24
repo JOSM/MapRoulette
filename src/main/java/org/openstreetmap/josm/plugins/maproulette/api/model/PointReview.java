@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.maproulette.api.model;
 
 import java.time.Instant;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Review information for a point
@@ -21,4 +21,18 @@ import javax.annotation.Nullable;
 public record PointReview(@Nullable Integer reviewStatus, @Nullable BaseUser reviewRequestedBy, @Nullable BaseUser reviewedBy,
                           @Nullable Instant reviewedAt, @Nullable Integer metaReviewStatus, @Nullable BaseUser metaReviewedBy,
                           @Nullable Instant metaReviewedAt, @Nullable Instant reviewStartedAt, @Nullable long[] additionalReviewers) {
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof PointReview other && RecordUtils.equals(this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return RecordUtils.hashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return RecordUtils.toString(this);
+    }
 }

@@ -11,9 +11,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Challenge;
@@ -23,14 +20,19 @@ import org.openstreetmap.josm.plugins.maproulette.markdown.SelectParser;
 import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.Utils;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 /**
  * A helper class for gui rendering
  */
 public final class MRGuiHelper {
     /**
-     * Replace mustache variables (see <a href="https://learn.maproulette.org/documentation/mustache-tag-replacement/">MapRoulette mustache tag replacement</a>)
+     * Replace mustache variables (see <a href="https://learn.maproulette.org/documentation/mustache-tag-replacement/">
+     *     MapRoulette mustache tag replacement
+     * </a>)
      */
-    private static final Pattern MUSTACHE_PATTERN = Pattern.compile("[{]{2}(.*?)[}]{2}");
+    private static final Pattern MUSTACHE_PATTERN = Pattern.compile("\\{{2}(.*?)}{2}");
     /**
      * Keys that should not be found in OSM but are often present in task metadata
      */

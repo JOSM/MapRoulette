@@ -3,13 +3,13 @@ package org.openstreetmap.josm.plugins.maproulette.api.model;
 
 import java.time.Instant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.NoteData;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.tools.Pair;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A MR task

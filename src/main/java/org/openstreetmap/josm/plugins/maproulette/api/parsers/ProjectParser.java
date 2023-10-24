@@ -6,11 +6,11 @@ import static org.openstreetmap.josm.plugins.maproulette.api.parsers.ParsingUtil
 
 import java.io.InputStream;
 
-import javax.annotation.Nonnull;
+import org.openstreetmap.josm.plugins.maproulette.api.model.Project;
+
+import jakarta.annotation.Nonnull;
 import jakarta.json.Json;
 import jakarta.json.JsonValue;
-
-import org.openstreetmap.josm.plugins.maproulette.api.model.Project;
 
 /**
  * A parser for {@link org.openstreetmap.josm.plugins.maproulette.api.model.Project} objects

@@ -1,10 +1,10 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api.model;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.openstreetmap.josm.plugins.maproulette.api.enums.Priority;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Calculations for challenge priority

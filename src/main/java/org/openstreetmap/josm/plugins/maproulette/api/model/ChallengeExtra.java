@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.maproulette.api.model;
 import java.time.Instant;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Extra information for a challenge
@@ -43,4 +43,19 @@ public record ChallengeExtra(int defaultZoom, int minZoom, int maxZoom, int defa
      * </a>
      */
     public static final List<String> DEFAULT_OSM_ID_PROPERTIES = List.of("id", "@id", "osmid", "osmIdentifier", "osm_id", "name");
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ChallengeExtra other && RecordUtils.equals(this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return RecordUtils.hashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return RecordUtils.toString(this);
+    }
 }

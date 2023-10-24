@@ -1,11 +1,11 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api.parsers;
 
-import javax.annotation.Nullable;
-import jakarta.json.JsonObject;
-
 import org.openstreetmap.josm.plugins.maproulette.api.model.PointReview;
 import org.openstreetmap.josm.plugins.maproulette.api.model.PublicUser;
+
+import jakarta.annotation.Nullable;
+import jakarta.json.JsonObject;
 
 /**
  * A parser for user objects

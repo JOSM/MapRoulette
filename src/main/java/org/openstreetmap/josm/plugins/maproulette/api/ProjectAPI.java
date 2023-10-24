@@ -5,11 +5,11 @@ import static org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfi
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
 import org.openstreetmap.josm.plugins.maproulette.api.model.Project;
 import org.openstreetmap.josm.plugins.maproulette.api.parsers.ProjectParser;
 import org.openstreetmap.josm.plugins.maproulette.util.HttpClientUtils;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * A class for getting data from Project APIs

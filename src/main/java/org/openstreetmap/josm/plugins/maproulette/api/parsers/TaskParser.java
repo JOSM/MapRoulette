@@ -14,14 +14,6 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import jakarta.json.Json;
-import jakarta.json.JsonArray;
-import jakarta.json.JsonNumber;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonString;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
@@ -39,6 +31,14 @@ import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api.model.TaskReviewFields;
 import org.openstreetmap.josm.tools.ExceptionUtil;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
 
 /**
  * Parse tasks

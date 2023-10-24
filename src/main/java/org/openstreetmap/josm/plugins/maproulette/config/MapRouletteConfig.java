@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.maproulette.config;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A class for storing MapRoulette configuration information

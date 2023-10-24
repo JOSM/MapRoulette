@@ -14,15 +14,6 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import jakarta.json.Json;
-import jakarta.json.JsonNumber;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonString;
-import jakarta.json.JsonStructure;
-import jakarta.json.JsonValue;
-
 import org.openstreetmap.josm.plugins.maproulette.api.enums.Priority;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Challenge;
 import org.openstreetmap.josm.plugins.maproulette.api.model.ChallengeCreation;
@@ -32,6 +23,15 @@ import org.openstreetmap.josm.plugins.maproulette.api.model.ChallengePriority;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api.parsers.PointParser;
 import org.openstreetmap.josm.plugins.maproulette.api.parsers.TaskParser;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.json.Json;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
 /**
  * A class for methods related to the challenge apis

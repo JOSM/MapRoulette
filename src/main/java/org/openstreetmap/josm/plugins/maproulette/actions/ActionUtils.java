@@ -5,10 +5,11 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.JList;
 import javax.swing.JTable;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Utils for an action
