@@ -11,7 +11,8 @@ import jakarta.json.JsonObject;
  * A parser for user objects
  */
 final class UserParser {
-    private UserParser() { /* Hide constructor */ }
+    private UserParser() {
+        /* Hide constructor */ }
 
     /**
      * Parse a {@link PointReview} object

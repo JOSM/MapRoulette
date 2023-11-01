@@ -11,8 +11,6 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JTable;
 
-import mockit.Mock;
-import mockit.MockUp;
 import org.junit.jupiter.api.Test;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -22,9 +20,12 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.maproulette.actions.IgnoreAction;
 import org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel;
 import org.openstreetmap.josm.plugins.maproulette.util.LoggingHandler;
-import org.openstreetmap.josm.plugins.maproulette.util.Main;
 import org.openstreetmap.josm.plugins.maproulette.util.MapRouletteConfig;
+import org.openstreetmap.josm.testutils.annotations.Main;
 import org.openstreetmap.josm.testutils.annotations.Projection;
+
+import mockit.Mock;
+import mockit.MockUp;
 
 /**
  * Test class for {@link TaskListPanel}

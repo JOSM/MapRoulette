@@ -30,8 +30,8 @@ final class RecordUtils {
             final var type = component.getType();
             final var firstObj = getField(first, component);
             final var secondObj = getField(second, component);
-            if ((type.isArray() && !arrayEquals(type, firstObj, secondObj)) ||
-                    (!type.isArray() && !Objects.equals(firstObj, secondObj))) {
+            if ((type.isArray() && !arrayEquals(type, firstObj, secondObj))
+                    || (!type.isArray() && !Objects.equals(firstObj, secondObj))) {
                 return false;
             }
         }
