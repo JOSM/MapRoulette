@@ -216,7 +216,7 @@ public final class TaskAPI {
         try {
             final var response = client.connect();
             final var content = response.fetchContent();
-            if (!Utils.isBlank(content)) {
+            if (!Utils.isStripEmpty(content)) {
                 Logging.info(content);
             }
             return response.getResponseCode() == 204;

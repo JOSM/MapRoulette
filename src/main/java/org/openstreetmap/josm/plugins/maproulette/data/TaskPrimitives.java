@@ -61,7 +61,7 @@ public final class TaskPrimitives {
             try {
                 final var challenge = ChallengeCache.challenge(task.parentId());
                 final var property = challenge.extra().osmIdProperty();
-                if (!Utils.isBlank(property)) {
+                if (!Utils.isStripEmpty(property)) {
                     return getPrimitiveIdMap(task, property);
                 }
             } catch (IOException ioException) {

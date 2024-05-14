@@ -59,7 +59,7 @@ public final class MRGuiHelper {
             return "";
         }
         final String instruction;
-        if (Utils.isBlank(currentTask.instruction())) {
+        if (Utils.isStripEmpty(currentTask.instruction())) {
             Challenge challenge;
             try {
                 challenge = ChallengeCache.challenge(currentTask.parentId());
@@ -69,9 +69,9 @@ public final class MRGuiHelper {
             }
             if (challenge == null) {
                 instruction = tr("Could not fetch instruction from parent challenge");
-            } else if (!Utils.isBlank(challenge.general().instruction())) {
+            } else if (!Utils.isStripEmpty(challenge.general().instruction())) {
                 instruction = challenge.general().instruction();
-            } else if (!Utils.isBlank(challenge.description())) {
+            } else if (!Utils.isStripEmpty(challenge.description())) {
                 instruction = challenge.description();
             } else {
                 instruction = challenge.name();
@@ -85,7 +85,7 @@ public final class MRGuiHelper {
             final var tag = matcher.group(1);
             final var replacement = currentTask.geometries().allPrimitives().stream().map(prim -> prim.get(tag))
                     .filter(Objects::nonNull).collect(Collectors.joining(System.lineSeparator()));
-            matcher.appendReplacement(builder, Utils.isBlank(replacement) ? matcher.group(0) : replacement);
+            matcher.appendReplacement(builder, Utils.isStripEmpty(replacement) ? matcher.group(0) : replacement);
         }
         matcher.appendTail(builder);
 

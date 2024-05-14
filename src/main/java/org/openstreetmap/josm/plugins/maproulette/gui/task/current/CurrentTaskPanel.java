@@ -273,7 +273,7 @@ public final class CurrentTaskPanel extends ToggleDialog {
                 final var name = (String) attribs.getAttribute(HTML.Attribute.NAME);
                 if (attribs.getAttribute(StyleConstants.ModelAttribute)instanceof DefaultComboBoxModel<?> listModel) {
                     final var option = (Option) listModel.getSelectedItem();
-                    if (!Utils.isBlank(option.getValue())) {
+                    if (!Utils.isStripEmpty(option.getValue())) {
                         selectionMap.put(name, option);
                     }
                 }

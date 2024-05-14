@@ -220,10 +220,10 @@ public final class EarlyUploadHook implements UploadHook {
             tagBuilder.append(entry.task().id());
             try {
                 final var challengeGeneral = ChallengeCache.challenge(entry.task().parentId()).general();
-                if (!Utils.isBlank(challengeGeneral.checkinComment())) {
+                if (!Utils.isStripEmpty(challengeGeneral.checkinComment())) {
                     changesetComments.add(challengeGeneral.checkinComment());
                 }
-                if (!Utils.isBlank(challengeGeneral.checkinSource())) {
+                if (!Utils.isStripEmpty(challengeGeneral.checkinSource())) {
                     sourceComments.add(challengeGeneral.checkinSource());
                 }
             } catch (IOException ioException) {

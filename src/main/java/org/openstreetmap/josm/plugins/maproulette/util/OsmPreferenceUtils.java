@@ -48,7 +48,7 @@ public final class OsmPreferenceUtils {
         }
         final var preferenceKey = "maproulette.openstreetmap." + getBaseUrl() + "." + user.getId();
         final var possibleApiKey = Config.getPref().get(preferenceKey);
-        if (!Utils.isBlank(possibleApiKey) && !"Couldn't authenticate you".equals(possibleApiKey)) {
+        if (!Utils.isStripEmpty(possibleApiKey) && !"Couldn't authenticate you".equals(possibleApiKey)) {
             return possibleApiKey;
         }
         final var osmServerKey = Config.getPref().get("maproulette.openstreetmap" + getBaseUrl() + ".api_key",
