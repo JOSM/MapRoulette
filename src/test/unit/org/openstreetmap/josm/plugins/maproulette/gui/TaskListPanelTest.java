@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,13 +44,13 @@ public class TaskListPanelTest {
      * @param ignoreType The ignore action to use
      */
     public static void fireIgnoreAction(TaskListPanel panel, IgnoreAction.IgnoreType ignoreType) {
-        final var table = ((JTable) ((JComponent) ((JComponent) ((JComponent) panel.getComponent(1 /* The scroll pane */))
-                .getComponent(0 /* The viewport */)).getComponent(0 /* A panel */))
-                .getComponent(2 /* The table */));
+        final var table = ((JTable) ((JComponent) ((JComponent) ((JComponent) panel
+                .getComponent(1 /* The scroll pane */)).getComponent(0 /* The viewport */))
+                        .getComponent(0 /* A panel */)).getComponent(2 /* The table */));
         final var menu = table.getComponentPopupMenu();
         final var menuItem = (JMenuItem) switch (ignoreType) {
-            case IGNORE_TASK -> menu.getComponent(1);
-            case IGNORE_CHALLENGE -> menu.getComponent(2);
+        case IGNORE_TASK -> menu.getComponent(1);
+        case IGNORE_CHALLENGE -> menu.getComponent(2);
         };
         menu.setInvoker(table);
         final var action = menuItem.getAction();
@@ -70,9 +71,11 @@ public class TaskListPanelTest {
             }
         };
         action.actionPerformed(null);
-        MainApplication.worker.submit(() -> { /* Sync thread */ }).get();
+        MainApplication.worker.submit(() -> {
+            /* Sync thread */ }).get();
         action.actionPerformed(null);
-        MainApplication.worker.submit(() -> { /* Sync thread */ }).get();
+        MainApplication.worker.submit(() -> {
+            /* Sync thread */ }).get();
     }
 
     /**
@@ -83,9 +86,9 @@ public class TaskListPanelTest {
      */
     public static Action getDownloadAction(TaskListPanel taskListPanel) {
         final var action = ((JButton) ((JComponent) ((JComponent) taskListPanel.getComponent(2 /* The side buttons */))
-                .getComponent(0 /* A singular JPanel */))
-                .getComponent(0 /* The download button */)).getAction();
-        assertEquals("org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel$DownloadDataAction", action.getClass().getName());
+                .getComponent(0 /* A singular JPanel */)).getComponent(0 /* The download button */)).getAction();
+        assertEquals("org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel$DownloadDataAction",
+                action.getClass().getName());
         return action;
     }
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.data;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -21,15 +22,10 @@ class IgnoreListTest {
         }
         IgnoreList.ignoreTask(15);
         IgnoreList.ignoreChallenge(15);
-        assertAll(() -> assertTrue(IgnoreList.isTaskIgnored(0)),
-                () -> assertTrue(IgnoreList.isChallengeIgnored(0)),
-                () -> assertTrue(IgnoreList.isTaskIgnored(9)),
-                () -> assertTrue(IgnoreList.isChallengeIgnored(9)),
-                () -> assertTrue(IgnoreList.isTaskIgnored(15)),
-                () -> assertTrue(IgnoreList.isChallengeIgnored(15)),
-                () -> assertTrue(IgnoreList.isTaskIgnored(20)),
-                () -> assertTrue(IgnoreList.isChallengeIgnored(20)),
-                () -> assertTrue(IgnoreList.isTaskIgnored(29)),
-                () -> assertTrue(IgnoreList.isChallengeIgnored(29)));
+        assertAll(() -> assertTrue(IgnoreList.isTaskIgnored(0)), () -> assertTrue(IgnoreList.isChallengeIgnored(0)),
+                () -> assertTrue(IgnoreList.isTaskIgnored(9)), () -> assertTrue(IgnoreList.isChallengeIgnored(9)),
+                () -> assertTrue(IgnoreList.isTaskIgnored(15)), () -> assertTrue(IgnoreList.isChallengeIgnored(15)),
+                () -> assertTrue(IgnoreList.isTaskIgnored(20)), () -> assertTrue(IgnoreList.isChallengeIgnored(20)),
+                () -> assertTrue(IgnoreList.isTaskIgnored(29)), () -> assertTrue(IgnoreList.isChallengeIgnored(29)));
     }
 }

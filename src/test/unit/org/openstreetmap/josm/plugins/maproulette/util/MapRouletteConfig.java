@@ -57,9 +57,9 @@ public @interface MapRouletteConfig {
 
         @Override
         protected void onBeforeEach(WireMockRuntimeInfo wireMockRuntimeInfo) {
-            org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig.setInstance(
-                    new org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig(wireMockRuntimeInfo.getHttpBaseUrl() + "/api/v2")
-            );
+            org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig
+                    .setInstance(new org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig(
+                            wireMockRuntimeInfo.getHttpBaseUrl() + "/api/v2"));
             Config.getPref().put("osm-server.url", wireMockRuntimeInfo.getHttpBaseUrl() + "/api");
         }
 
@@ -85,14 +85,17 @@ public @interface MapRouletteConfig {
     class MapRouletteExtension extends ResponseDefinitionTransformer {
 
         @Override
-        public ResponseDefinition transform(Request request, ResponseDefinition responseDefinition, FileSource files, Parameters parameters) {
+        public ResponseDefinition transform(Request request, ResponseDefinition responseDefinition, FileSource files,
+                Parameters parameters) {
             if (request.getUrl().startsWith("/api/v2/task/") && request.getUrl().matches("/api/v2/task/\\d+")) {
                 final var file = files.getTextFileNamed(request.getUrl().substring(1) + "/start");
                 if (file != null) {
-                    final var builder = responseDefinition.wasConfigured() ? ResponseDefinitionBuilder.like(responseDefinition) : ResponseDefinitionBuilder.responseDefinition();
-                    return builder
-                            .withStatus(HTTP_OK)
-                            .withResponseBody(Body.ofBinaryOrText(file.readContents(), new ContentTypeHeader("application/json")))
+                    final var builder = responseDefinition.wasConfigured()
+                            ? ResponseDefinitionBuilder.like(responseDefinition)
+                            : ResponseDefinitionBuilder.responseDefinition();
+                    return builder.withStatus(HTTP_OK)
+                            .withResponseBody(
+                                    Body.ofBinaryOrText(file.readContents(), new ContentTypeHeader("application/json")))
                             .build();
                 }
             }

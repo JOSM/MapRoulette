@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.io.upload;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -56,7 +57,7 @@ class EarlyUploadHookTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"9494185766_node_4", "9494185766", "node/9494185766", "node 9494185766@4"})
+    @ValueSource(strings = { "9494185766_node_4", "9494185766", "node/9494185766", "node 9494185766@4" })
     void testRegexParsing(String title) {
         final var ds = new DataSet();
         final var node = TestUtils.newNode("");
@@ -66,12 +67,11 @@ class EarlyUploadHookTest {
         ds.addPrimitive(node);
         final var apiDataSet = new APIDataSet(ds);
         MainApplication.getLayerManager().addLayer(new OsmDataLayer(ds, "testRegexParsing", null));
-        final var mrLayer = new MapRouletteClusteredPointLayer(new Bounds(0, 0, 0, 0), Collections.singleton(
-                new ClusteredPoint(132279499L, 0L, "null", title, 0L, "parentName", new Point(0, 0),
-                        "bounding", "blurb", Instant.EPOCH, Difficulty.NORMAL, 2, TaskStatus.CREATED, null,
-                        Instant.EPOCH, 0L, new PublicUser(0L, null, "someone", Instant.EPOCH, null),
-                        new PointReview(null, null, null, null, null, null, null, null, null), 0, null, false)
-        ));
+        final var mrLayer = new MapRouletteClusteredPointLayer(new Bounds(0, 0, 0, 0),
+                Collections.singleton(new ClusteredPoint(132279499L, 0L, "null", title, 0L, "parentName",
+                        new Point(0, 0), "bounding", "blurb", Instant.EPOCH, Difficulty.NORMAL, 2, TaskStatus.CREATED,
+                        null, Instant.EPOCH, 0L, new PublicUser(0L, null, "someone", Instant.EPOCH, null),
+                        new PointReview(null, null, null, null, null, null, null, null, null), 0, null, false)));
         MainApplication.getLayerManager().addLayer(mrLayer);
         Config.getPref().putInt("message." + EarlyUploadHook.PREF_CHECK_IF_FINISHED + ".value", 0);
         Config.getPref().putBoolean("message." + EarlyUploadHook.PREF_CHECK_IF_FINISHED, false);
@@ -87,7 +87,9 @@ class EarlyUploadHookTest {
     @Test
     void testManyClosedTasks() {
         for (int i = 100_000_000; i < 100_000_050; i++) {
-            ModifiedObjects.addModifiedTask(new ModifiedTask(new Task(i, "", null, null, 15318, null, null, null, null, null, null, null, null, null, 0, null, null, null, false, null, null), TaskStatus.FIXED, null, null, null, null));
+            ModifiedObjects.addModifiedTask(
+                    new ModifiedTask(new Task(i, "", null, null, 15318, null, null, null, null, null, null, null, null,
+                            null, 0, null, null, null, false, null, null), TaskStatus.FIXED, null, null, null, null));
         }
         final var map = new HashMap<String, String>();
         hook.modifyChangesetTags(map);

@@ -55,35 +55,47 @@ public final class RecordAssertion {
                 final var actualObj = method.invoke(actual);
                 if (expectedObj instanceof Record && actualObj instanceof Record
                         && expectedObj.getClass().equals(actualObj.getClass())) {
-                    executableList.add(() -> assertRecordsEqual((Record) expectedObj, (Record) actualObj, component.getName()));
+                    executableList.add(
+                            () -> assertRecordsEqual((Record) expectedObj, (Record) actualObj, component.getName()));
                 } else if (expectedObj instanceof Object[] expectedArray && actualObj instanceof Object[] actualArray) {
-                    if (expectedObj.getClass().getComponentType().isRecord() && expectedObj.getClass().equals(actualObj.getClass())) {
-                        executableList.add(() -> assertEquals(expectedArray.length, actualArray.length, component.getName()));
+                    if (expectedObj.getClass().getComponentType().isRecord()
+                            && expectedObj.getClass().equals(actualObj.getClass())) {
+                        executableList
+                                .add(() -> assertEquals(expectedArray.length, actualArray.length, component.getName()));
                         if (expectedArray.length == actualArray.length) {
                             for (int i = 0; i < expectedArray.length; i++) {
                                 final var index = i;
-                                executableList.add(() -> assertRecordsEqual((Record) expectedArray[index], (Record) actualArray[index], component.getName()));
+                                executableList.add(() -> assertRecordsEqual((Record) expectedArray[index],
+                                        (Record) actualArray[index], component.getName()));
                             }
                         }
                     } else {
                         executableList.add(() -> assertArrayEquals(expectedArray, actualArray, component.getName()));
                     }
                 } else if (expectedObj instanceof long[] && actualObj instanceof long[]) {
-                    executableList.add(() -> assertArrayEquals((long[]) expectedObj, (long[]) actualObj, component.getName()));
+                    executableList.add(
+                            () -> assertArrayEquals((long[]) expectedObj, (long[]) actualObj, component.getName()));
                 } else if (expectedObj instanceof int[] && actualObj instanceof int[]) {
-                    executableList.add(() -> assertArrayEquals((int[]) expectedObj, (int[]) actualObj, component.getName()));
+                    executableList
+                            .add(() -> assertArrayEquals((int[]) expectedObj, (int[]) actualObj, component.getName()));
                 } else if (expectedObj instanceof short[] && actualObj instanceof short[]) {
-                    executableList.add(() -> assertArrayEquals((short[]) expectedObj, (short[]) actualObj, component.getName()));
+                    executableList.add(
+                            () -> assertArrayEquals((short[]) expectedObj, (short[]) actualObj, component.getName()));
                 } else if (expectedObj instanceof char[] && actualObj instanceof char[]) {
-                    executableList.add(() -> assertArrayEquals((char[]) expectedObj, (char[]) actualObj, component.getName()));
+                    executableList.add(
+                            () -> assertArrayEquals((char[]) expectedObj, (char[]) actualObj, component.getName()));
                 } else if (expectedObj instanceof byte[] && actualObj instanceof byte[]) {
-                    executableList.add(() -> assertArrayEquals((byte[]) expectedObj, (byte[]) actualObj, component.getName()));
+                    executableList.add(
+                            () -> assertArrayEquals((byte[]) expectedObj, (byte[]) actualObj, component.getName()));
                 } else if (expectedObj instanceof boolean[] && actualObj instanceof boolean[]) {
-                    executableList.add(() -> assertArrayEquals((boolean[]) expectedObj, (boolean[]) actualObj, component.getName()));
+                    executableList.add(() -> assertArrayEquals((boolean[]) expectedObj, (boolean[]) actualObj,
+                            component.getName()));
                 } else if (expectedObj instanceof double[] && actualObj instanceof double[]) {
-                    executableList.add(() -> assertArrayEquals((double[]) expectedObj, (double[]) actualObj, component.getName()));
+                    executableList.add(
+                            () -> assertArrayEquals((double[]) expectedObj, (double[]) actualObj, component.getName()));
                 } else if (expectedObj instanceof float[] && actualObj instanceof float[]) {
-                    executableList.add(() -> assertArrayEquals((float[]) expectedObj, (float[]) actualObj, component.getName()));
+                    executableList.add(
+                            () -> assertArrayEquals((float[]) expectedObj, (float[]) actualObj, component.getName()));
                 } else {
                     executableList.add(() -> assertEquals(expectedObj, actualObj, component.getName()));
                 }

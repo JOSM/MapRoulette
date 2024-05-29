@@ -35,7 +35,7 @@ import org.openstreetmap.josm.tools.Logging;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @ExtendWith(LoggingHandler.LoggingHandlerImplementation.class)
 public @interface LoggingHandler {
     /**
@@ -52,11 +52,14 @@ public @interface LoggingHandler {
 
         @Override
         public void afterEach(ExtensionContext context) {
-            MainApplication.worker.submit(() -> { /* Sync thread */ });
-            GuiHelper.runInEDTAndWait(() -> { /* Sync thread */ });
-            final int failLevel = AnnotationSupport.findAnnotation(context.getElement(), LoggingHandler.class).map(LoggingHandler::value)
-                    .orElse(AnnotationSupport.findAnnotation(context.getClass(), LoggingHandler.class).map(LoggingHandler::value)
-                            .orElse(1000));
+            MainApplication.worker.submit(() -> {
+                /* Sync thread */ });
+            GuiHelper.runInEDTAndWait(() -> {
+                /* Sync thread */ });
+            final int failLevel = AnnotationSupport.findAnnotation(context.getElement(), LoggingHandler.class)
+                    .map(LoggingHandler::value)
+                    .orElse(AnnotationSupport.findAnnotation(context.getClass(), LoggingHandler.class)
+                            .map(LoggingHandler::value).orElse(1000));
             ExtensionContext.Store store = context.getStore(ExtensionContext.Namespace.create(LoggingHandler.class));
             TestHandler testHandler = store.get(TestHandler.class, TestHandler.class);
             Logging.getLogger().removeHandler(testHandler);
@@ -64,9 +67,9 @@ public @interface LoggingHandler {
             for (Handler handler : handlers) {
                 Logging.getLogger().addHandler(handler);
             }
-            assertAll(testHandler.getRecords().stream()
-                    .filter(logRecord -> logRecord.getLevel().intValue() >= failLevel)
-                    .map(logRecord -> fail(logRecord.getMessage(), logRecord.getThrown())));
+            assertAll(
+                    testHandler.getRecords().stream().filter(logRecord -> logRecord.getLevel().intValue() >= failLevel)
+                            .map(logRecord -> fail(logRecord.getMessage(), logRecord.getThrown())));
             testHandler.clearRecords();
         }
 
@@ -81,8 +84,8 @@ public @interface LoggingHandler {
             store.put(TestHandler.class, testHandler);
             Logging.getLogger().addHandler(testHandler);
             // Ensure that exceptions thrown in the EDT are logged -- they weren't in testing
-            GuiHelper.runInEDTAndWaitWithException(() ->
-                    Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> Logging.error(throwable)));
+            GuiHelper.runInEDTAndWaitWithException(() -> Thread.currentThread()
+                    .setUncaughtExceptionHandler((thread, throwable) -> Logging.error(throwable)));
         }
 
         @Override
@@ -134,4 +137,3 @@ public @interface LoggingHandler {
         }
     }
 }
-

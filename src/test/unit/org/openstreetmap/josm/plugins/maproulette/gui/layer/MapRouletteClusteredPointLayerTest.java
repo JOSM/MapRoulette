@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.gui.layer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +54,8 @@ class MapRouletteClusteredPointLayerTest {
         try {
             MainApplication.getMap().addToggleDialog(panel);
             TaskListPanelTest.getDownloadAction(panel).actionPerformed(null);
-            MainApplication.worker.submit(() -> { /* Sync thread */ }).get(5, TimeUnit.SECONDS);
+            MainApplication.worker.submit(() -> {
+                /* Sync thread */ }).get(5, TimeUnit.SECONDS);
             final var layers = MainApplication.getLayerManager().getLayersOfType(MapRouletteClusteredPointLayer.class);
             assertEquals(1, layers.size());
             final var layer = layers.get(0);
@@ -68,7 +70,8 @@ class MapRouletteClusteredPointLayerTest {
             // Now what happens with shift events?
             layer.mouseClicked(generateMouseEvent(true, 36.0778797, -119.1075725));
             assertEquals(2, panel.getSelected().size());
-            assertTrue(panel.getSelected().stream().mapToLong(Identifier::id).allMatch(id -> id == 133361784L || id == 133361785L));
+            assertTrue(panel.getSelected().stream().mapToLong(Identifier::id)
+                    .allMatch(id -> id == 133361784L || id == 133361785L));
             assertEquals(2, panel.getSelected().stream().mapToLong(Identifier::id).distinct().count());
             // Now, let us hide the challenge for the objects we have selected
             TaskListPanelTest.fireIgnoreAction(panel, IgnoreAction.IgnoreType.IGNORE_CHALLENGE);
@@ -88,7 +91,7 @@ class MapRouletteClusteredPointLayerTest {
         final var ll = new LatLon(lat, lon);
         mv.zoomTo(ll);
         final var point = mv.getPoint(ll);
-        return new MouseEvent(MainApplication.getMap(), UUID.randomUUID().hashCode(),
-                System.currentTimeMillis(), shift ? MouseEvent.SHIFT_DOWN_MASK : 0, point.x, point.y, 1, false, MouseEvent.BUTTON1);
+        return new MouseEvent(MainApplication.getMap(), UUID.randomUUID().hashCode(), System.currentTimeMillis(),
+                shift ? MouseEvent.SHIFT_DOWN_MASK : 0, point.x, point.y, 1, false, MouseEvent.BUTTON1);
     }
 }

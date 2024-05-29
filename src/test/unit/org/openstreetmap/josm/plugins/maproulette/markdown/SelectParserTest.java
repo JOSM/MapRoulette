@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.markdown;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,14 +30,14 @@ class SelectParserTest {
     static List<Arguments> testSelect() {
         final var renderSelect = "\n<select>\n<option selected=\"\" value=\" \"> </option>\n<option value=\"One\">One</option>\n<option value=\"Two\">Two</option>\n<option value=\"Three\">Three</option>\n</select>\n";
         final var markdownSelect = "[select \" \" values=\"One,Two,Three\"]";
-        return Arrays.asList(
-                Arguments.of("<p>" + renderSelect + "</p>\n", markdownSelect),
+        return Arrays.asList(Arguments.of("<p>" + renderSelect + "</p>\n", markdownSelect),
                 Arguments.of("<p>Matching: " + renderSelect + "</p>\n", "Matching: " + markdownSelect),
                 Arguments.of("<p>" + renderSelect + " values</p>\n", markdownSelect + " values"),
-                Arguments.of("<p>Matching: " + renderSelect + " values</p>\n", "Matching: " + markdownSelect + " values"),
-                Arguments.of("<p>\n<select name=\"Test Name\">\n<option selected=\"\" value=\" \"> </option>\n<option value=\"One\">One</option>\n<option value=\"Two\">Two</option>\n<option value=\"Three\">Three</option>\n</select>\n</p>\n",
-                        "[select \" \" name=\"Test Name\" values=\"One,Two,Three\"]")
-        );
+                Arguments.of("<p>Matching: " + renderSelect + " values</p>\n",
+                        "Matching: " + markdownSelect + " values"),
+                Arguments.of(
+                        "<p>\n<select name=\"Test Name\">\n<option selected=\"\" value=\" \"> </option>\n<option value=\"One\">One</option>\n<option value=\"Two\">Two</option>\n<option value=\"Three\">Three</option>\n</select>\n</p>\n",
+                        "[select \" \" name=\"Test Name\" values=\"One,Two,Three\"]"));
     }
 
     @ParameterizedTest
