@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.openstreetmap.josm</groupId>
             <artifactId>josm</artifactId>
-            <version>18511</version>
+            <version>18746</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
