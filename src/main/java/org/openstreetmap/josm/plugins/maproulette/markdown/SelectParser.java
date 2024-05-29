@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import org.commonmark.internal.util.Parsing;
+import org.commonmark.text.Characters;
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.CustomNode;
 import org.commonmark.node.Node;
@@ -82,8 +82,8 @@ public class SelectParser implements Parser.ParserExtension, HtmlRenderer.HtmlRe
          * @param selectBlock The full select block
          */
         SelectNode(String selectBlock) {
-            final var startDefault = Parsing.find('"', selectBlock, 0) + 1;
-            final var endDefault = Parsing.find('"', selectBlock, startDefault);
+            final var startDefault = Characters.find('"', selectBlock, 0) + 1;
+            final var endDefault = Characters.find('"', selectBlock, startDefault);
             final var valueMatcher = Pattern.compile("values=\"([^\"]*)").matcher(selectBlock);
             final var nameMatcher = Pattern.compile("name=\"([^\"]*)").matcher(selectBlock);
             if (nameMatcher.find()) {
