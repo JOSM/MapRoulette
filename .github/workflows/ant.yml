@@ -21,7 +21,7 @@ jobs:
       release_needed: ${{ steps.create_release_needed.outputs.release_needed }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: ${{ (github.repository == 'JOSM/MapRoulette' && github.ref_type == 'branch' && github.ref_name == 'master' && github.event_name != 'schedule' && github.event_name != 'pull_request') && '0' || '1' }}
 
@@ -44,7 +44,7 @@ jobs:
     strategy:
       matrix:
         josm-revision: ["", "r18877"]
-    uses: JOSM/JOSMPluginAction/.github/workflows/ant.yml@v1
+    uses: JOSM/JOSMPluginAction/.github/workflows/ant.yml@v2
     with:
       josm-revision: ${{ matrix.josm-revision }}
       java-version: 17
