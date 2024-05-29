@@ -42,10 +42,12 @@ import org.openstreetmap.josm.plugins.maproulette.actions.IgnoreAction;
 import org.openstreetmap.josm.plugins.maproulette.actions.downloadtasks.MapRouletteDownloadTaskBox;
 import org.openstreetmap.josm.plugins.maproulette.api.MRColors;
 import org.openstreetmap.josm.plugins.maproulette.api.model.ClusteredPoint;
+import org.openstreetmap.josm.plugins.maproulette.api.model.Identifier;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api.model.TaskClusteredPoint;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.ChallengeCache;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.TaskCache;
+import org.openstreetmap.josm.plugins.maproulette.data.HiddenList;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
 import org.openstreetmap.josm.plugins.maproulette.gui.layer.MapRouletteClusteredPointLayer;
 import org.openstreetmap.josm.plugins.maproulette.gui.preferences.MapRoulettePreferences;
@@ -105,6 +107,7 @@ public final class TaskListPanel extends ToggleDialog
                 return !TaskCache.isHidden(point);
             }
         };
+        HiddenList.addListUpdater(this::isHidden);
         filterField.filter(expr -> {
             expr = expr.replace("+", "\\+");
             final ArrayList<RowFilter<? super TaskTableModel, ? super Integer>> andFilters = new ArrayList<>();
@@ -114,6 +117,11 @@ public final class TaskListPanel extends ToggleDialog
                 andFilters.add(RowFilter.regexFilter("(?i)" + word));
             }
             tableRowSorter.setRowFilter(andFilters.size() > 1 ? RowFilter.andFilter(andFilters) : defaultFilter);
+            final var layers = MainApplication.getLayerManager().getLayersOfType(MapRouletteClusteredPointLayer.class);
+            final var ids = layers.stream().map(MapRouletteClusteredPointLayer::getTasks).flatMap(Collection::stream)
+                    .mapToLong(Identifier::id).toArray();
+            HiddenList.update(ids);
+            layers.forEach(MapRouletteClusteredPointLayer::invalidate);
         });
         menu.add(new GoToTaskLocation());
         menu.add(new IgnoreAction(IgnoreAction.IgnoreType.IGNORE_TASK));
@@ -245,6 +253,20 @@ public final class TaskListPanel extends ToggleDialog
     @Override
     public void layerOrderChanged(LayerManager.LayerOrderChangeEvent e) {
         // Ignore
+    }
+
+    /**
+     * Check if a task is hidden
+     * @param id The task to check
+     * @return {@code true} if the task is hidden
+     */
+    private boolean isHidden(long id) {
+        for (int i = 0; i < this.model.getRowCount(); i++) {
+            if (id == this.model.get(i).id()) {
+                return this.table.convertRowIndexToView(i) < 0;
+            }
+        }
+        return true;
     }
 
     /**

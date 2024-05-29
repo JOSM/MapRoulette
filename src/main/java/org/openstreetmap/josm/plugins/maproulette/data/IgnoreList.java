@@ -17,11 +17,11 @@ public final class IgnoreList {
     /**
      * The ignored tasks
      */
-    private static long[] ignoredTasks = convertList(Config.getPref().getList("mapillary.ignore.tasks"));
+    private static long[] ignoredTasks = convertList(Config.getPref().getList("maproulette.ignore.tasks"));
     /**
      * The ignored challenges
      */
-    private static long[] ignoredChallenges = convertList(Config.getPref().getList("mapillary.ignore.challenges"));
+    private static long[] ignoredChallenges = convertList(Config.getPref().getList("maproulette.ignore.challenges"));
     /**
      * {@code true} if a save is required
      */
@@ -96,8 +96,8 @@ public final class IgnoreList {
         final var tasks = ignoredTasks;
         final var challenges = ignoredChallenges;
         if (doSave) {
-            Config.getPref().putList("mapillary.ignore.tasks", convertList(tasks));
-            Config.getPref().putList("mapillary.ignore.challenges", convertList(challenges));
+            Config.getPref().putList("maproulette.ignore.tasks", convertList(tasks));
+            Config.getPref().putList("maproulette.ignore.challenges", convertList(challenges));
         }
     }
 

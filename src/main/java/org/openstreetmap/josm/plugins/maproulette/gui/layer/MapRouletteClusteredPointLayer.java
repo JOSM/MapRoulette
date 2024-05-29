@@ -52,6 +52,7 @@ import org.openstreetmap.josm.plugins.maproulette.api.model.Locatable;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api.model.TaskClusteredPoint;
 import org.openstreetmap.josm.plugins.maproulette.api_caching.TaskCache;
+import org.openstreetmap.josm.plugins.maproulette.data.HiddenList;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
 import org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel;
 import org.openstreetmap.josm.plugins.maproulette.io.upload.LateUploadHook;
@@ -199,8 +200,9 @@ public class MapRouletteClusteredPointLayer extends Layer implements MouseListen
         final var painter = new StyledMapRenderer(g, mv, false);
         final var mrColor = LOCKED_TASK_COLOR.get();
         final var mrColorOpacity = new Color(mrColor.getRed(), mrColor.getGreen(), mrColor.getBlue(), 128);
+        final var taskListPanel = MainApplication.getMap().getToggleDialog(TaskListPanel.class);
 
-        final var listSelected = MainApplication.getMap().getToggleDialog(TaskListPanel.class).getSelected();
+        final var listSelected = taskListPanel.getSelected();
 
         painter.enableSlowOperations(mv.getMapMover() == null || !mv.getMapMover().movementInProgress()
                 || !PROPERTY_HIDE_LABELS_WHILE_DRAGGING.get());
@@ -214,7 +216,8 @@ public class MapRouletteClusteredPointLayer extends Layer implements MouseListen
         final var statusSymbol = new Symbol(SymbolShape.SQUARE, 25, null, fixedColor, fixedColor);
         final var disabledStatusSymbol = new Symbol(SymbolShape.SQUARE, 13, null, fixedColor, fixedColor);
         for (var point : this.pointBucket.search(box)) {
-            if (ModifiedObjects.getLockedTask(point.id()) == null && !TaskCache.isHidden(point)) {
+            if (ModifiedObjects.getLockedTask(point.id()) == null && !TaskCache.isHidden(point)
+                    && !HiddenList.isHidden(point.id())) {
                 final boolean isSelected = this.selected.contains(point) || listSelected.contains(point);
                 final var symbolColor = switch (point.status()) {
                 case FIXED -> fixedColor;
