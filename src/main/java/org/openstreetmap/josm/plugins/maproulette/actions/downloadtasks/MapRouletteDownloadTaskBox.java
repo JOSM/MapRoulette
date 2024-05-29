@@ -27,6 +27,7 @@ import org.openstreetmap.josm.gui.preferences.server.ServerAccessPreference;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressTaskId;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.io.OsmApiException;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
 import org.openstreetmap.josm.plugins.maproulette.api.UnauthorizedException;
@@ -108,7 +109,7 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
                     }
                 });
                 // This is specifically so that user's don't get a bug report message
-                final var transferException = new OsmTransferException(unauthorizedException);
+                final var transferException = new OsmApiException(unauthorizedException);
                 transferException.setUrl(MapRouletteConfig.getBaseUrl());
                 throw transferException;
             } catch (IOException e) {

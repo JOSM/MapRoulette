@@ -1,12 +1,13 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.api;
 
+import java.io.IOException;
 import java.io.Serial;
 
 /**
  * Thrown if the user is not authorized for the specified operation
  */
-public class UnauthorizedException extends RuntimeException {
+public class UnauthorizedException extends IOException {
     /**
      * The serial UID for this exception
      */

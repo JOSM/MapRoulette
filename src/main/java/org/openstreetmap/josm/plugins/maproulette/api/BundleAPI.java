@@ -84,9 +84,10 @@ public final class BundleAPI {
      *
      * @param id The id of the bundle to get
      * @return The specified bundle
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
     @Nonnull
-    public static TaskBundle getBundle(long id) {
+    public static TaskBundle getBundle(long id) throws UnauthorizedException {
         final var client = get(getBaseUrl() + PATH + "/" + id);
         try {
             try (var inputStream = client.connect().getContent()) {
@@ -104,8 +105,9 @@ public final class BundleAPI {
      *
      * @param id The bundle to delete
      * @return {@code true} if the deletion was successful
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
-    public static boolean deleteBundle(long id) {
+    public static boolean deleteBundle(long id) throws UnauthorizedException {
         final var client = delete(getBaseUrl() + PATH + "/" + id);
         try {
             int responseCode = client.connect().getResponseCode();
@@ -126,9 +128,10 @@ public final class BundleAPI {
      * @param original The original bundle
      * @param taskIds  The tasks to remove
      * @return The new bundle
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
     @Nonnull
-    public static TaskBundle unbundle(TaskBundle original, long... taskIds) {
+    public static TaskBundle unbundle(TaskBundle original, long... taskIds) throws UnauthorizedException {
         final var client = get(getBaseUrl() + PATH + "/" + original.id() + "/unbundle",
                 Map.of("taskIds", LongStream.of(taskIds).mapToObj(Long::toString).collect(Collectors.joining(","))));
         try {

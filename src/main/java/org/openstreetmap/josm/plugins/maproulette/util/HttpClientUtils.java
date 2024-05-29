@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.openstreetmap.josm.plugins.maproulette.api.UnauthorizedException;
 import org.openstreetmap.josm.tools.HttpClient;
 
 /**
@@ -28,8 +29,9 @@ public final class HttpClientUtils {
      *
      * @param url The url to GET
      * @return The client to use
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
-    public static HttpClient get(String url) {
+    public static HttpClient get(String url) throws UnauthorizedException {
         return get(url, Collections.emptyMap());
     }
 
@@ -39,8 +41,9 @@ public final class HttpClientUtils {
      * @param url             The url to GET
      * @param queryParameters The query parameters
      * @return The client to use
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
-    public static HttpClient get(String url, Map<String, String> queryParameters) {
+    public static HttpClient get(String url, Map<String, String> queryParameters) throws UnauthorizedException {
         var client = HttpClient.create(safeUrl(url, queryParameters));
         sign(client);
         return client;
@@ -69,8 +72,9 @@ public final class HttpClientUtils {
      * Sign the client
      *
      * @param client The client to add the api key to
+     * @throws UnauthorizedException if the user isn't logged in or hasn't logged in to MapRoulette before
      */
-    private static void sign(HttpClient client) {
+    private static void sign(HttpClient client) throws UnauthorizedException {
         client.setHeader("apiKey", OsmPreferenceUtils.getMapRouletteApiKey());
     }
 
@@ -91,8 +95,9 @@ public final class HttpClientUtils {
      * @param url             The url to PUT
      * @param queryParameters The query parameters
      * @return The client to use
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
-    public static HttpClient put(String url, Map<String, String> queryParameters) {
+    public static HttpClient put(String url, Map<String, String> queryParameters) throws UnauthorizedException {
         var client = put(url, Collections.emptyMap(),
                 query(queryParameters).substring(1).getBytes(StandardCharsets.UTF_8));
         client.setHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -106,8 +111,10 @@ public final class HttpClientUtils {
      * @param queryParameters The query parameters
      * @param body The body to use
      * @return The client to use
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
-    public static HttpClient put(String url, Map<String, String> queryParameters, byte[] body) {
+    public static HttpClient put(String url, Map<String, String> queryParameters, byte[] body)
+            throws UnauthorizedException {
         var client = HttpClient.create(safeUrl(url, queryParameters), "PUT");
         client.setRequestBody(Objects.requireNonNullElse(body, new byte[0]));
         sign(client);
@@ -120,8 +127,9 @@ public final class HttpClientUtils {
      * @param url             The URL to POST
      * @param queryParameters The query parameters to be put in the body
      * @return The client to use
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
-    public static HttpClient post(String url, Map<String, String> queryParameters) {
+    public static HttpClient post(String url, Map<String, String> queryParameters) throws UnauthorizedException {
         var client = HttpClient.create(safeUrl(url, Collections.emptyMap()), "POST");
         client.setRequestBody(query(queryParameters).substring(1).getBytes(StandardCharsets.UTF_8));
         sign(client);
@@ -133,8 +141,9 @@ public final class HttpClientUtils {
      *
      * @param url The URL to DELETE
      * @return The client to use
+     * @throws UnauthorizedException if the user hasn't logged in to MapRoulette
      */
-    public static HttpClient delete(String url) {
+    public static HttpClient delete(String url) throws UnauthorizedException {
         var client = HttpClient.create(safeUrl(url, Collections.emptyMap()), "DELETE");
         sign(client);
         return client;
