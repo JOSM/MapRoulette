@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.maproulette.gui.task.current;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -114,7 +115,7 @@ public final class CurrentTaskPanel extends ToggleDialog {
         final var gbc = GBC.eol();
         this.panel.add(this.idLabel, gbc);
         this.panel.add(new JLabel(tr("Instructions: ")), gbc);
-        gbc.fill(GBC.BOTH);
+        gbc.fill(GridBagConstraints.BOTH);
         this.panel.add(this.instructionPane, gbc);
         this.panel.add(this.cooperativeWork, gbc);
         super.createLayout(this.panel.getVerticalScrollPane(), false, sideButtons);
@@ -204,8 +205,8 @@ public final class CurrentTaskPanel extends ToggleDialog {
                     && OsmDataManager.getInstance().getEditDataSet() != null) {
                 cooperativePanel.add(new JLabel(tr("Tag Updates")), GBC.eol());
                 final var table = new TagChangeTable();
-                cooperativePanel.add(table.getTableHeader(), GBC.eol().fill(GBC.HORIZONTAL));
-                cooperativePanel.add(table, GBC.eol().fill(GBC.HORIZONTAL));
+                cooperativePanel.add(table.getTableHeader(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+                cooperativePanel.add(table, GBC.eol().fill(GridBagConstraints.HORIZONTAL));
                 for (var updates : taskCooperativeWork.updates()) {
                     var row = 0;
                     final var current = OsmDataManager.getInstance().getEditDataSet().getPrimitiveById(updates.osmId(),

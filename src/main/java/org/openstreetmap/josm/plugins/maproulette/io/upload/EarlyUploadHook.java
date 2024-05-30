@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfi
 import static org.openstreetmap.josm.plugins.maproulette.gui.task.current.CurrentTaskPanel.getSelections;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -34,8 +36,7 @@ import org.openstreetmap.josm.data.osm.Tagged;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.util.GuiHelper;
-import org.openstreetmap.josm.gui.widgets.JosmEditorPane;
-import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
+import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.ClusteredPoint;
@@ -104,13 +105,17 @@ public final class EarlyUploadHook implements UploadHook {
         ConditionalOptionPaneUtil.startBulkOperation(PREF_CHECK_IF_FINISHED);
         for (var task : possibleTasks) {
             if (ids.containsAll(TaskPrimitives.getPrimitiveIds(task))) {
-                final var descriptivePanel = createDescriptivePanel(task, apiDataSet);
-                final var didFix = ConditionalOptionPaneUtil.showConfirmationDialog(PREF_CHECK_IF_FINISHED,
-                        MainApplication.getMainFrame(), descriptivePanel,
-                        tr("Did you finish the following MapRoulette Task: {0}?", task.id()),
-                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION);
-                if (didFix) {
-                    final var doc = (HTMLDocument) ((JosmEditorPane) descriptivePanel.getComponent(1)).getDocument();
+                final var descriptivePanel = GuiHelper
+                        .runInEDTAndWaitAndReturn(() -> createDescriptivePanel(task, apiDataSet));
+                Objects.requireNonNull(descriptivePanel);
+                final var didFix = GuiHelper.runInEDTAndWaitAndReturn(
+                        () -> ConditionalOptionPaneUtil.showConfirmationDialog(PREF_CHECK_IF_FINISHED,
+                                MainApplication.getMainFrame(), descriptivePanel,
+                                tr("Did you finish the following MapRoulette Task: {0}?", task.id()),
+                                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                                JOptionPane.YES_OPTION));
+                if (Boolean.TRUE.equals(didFix)) {
+                    final var doc = (HTMLDocument) ((JMultilineLabel) descriptivePanel.getComponent(1)).getDocument();
                     ModifiedObjects.addModifiedTask(
                             new ModifiedTask(task, TaskStatus.FIXED, null, null, null, getSelections(doc)));
                 }
@@ -163,14 +168,11 @@ public final class EarlyUploadHook implements UploadHook {
         return null;
     }
 
-    private static JPanel createDescriptivePanel(Task task, APIDataSet dataSet) {
-        final var panel = new VerticallyScrollablePanel(new GridBagLayout());
-        final var gbc = GBC.eol().fill(GBC.HORIZONTAL);
-        final var instructionPane = new JosmEditorPane();
-        JosmEditorPane.makeJLabelLike(instructionPane, false);
-        instructionPane.setText(MRGuiHelper.getInstructionText(task));
-        panel.add(new JLabel(tr("Instructions:")), gbc);
-        panel.add(instructionPane, gbc);
+    private static JComponent createDescriptivePanel(Task task, APIDataSet dataSet) {
+        final var panel = new JPanel(new GridBagLayout());
+        final var instructionPane = new JMultilineLabel(MRGuiHelper.getInstructionText(task));
+        panel.add(new JLabel(tr("Instructions:")), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+        panel.add(instructionPane, GBC.eol().fill(GridBagConstraints.HORIZONTAL));
         final var map = TaskPrimitives.getPrimitiveIdMap(task);
         for (var taskPrimitive : task.geometries().allPrimitives()) {
             if (taskPrimitive.isTagged()) {
@@ -191,9 +193,9 @@ public final class EarlyUploadHook implements UploadHook {
                         table.setValueAt(taskPrimitive.get(key), row, 1);
                         table.setValueAt(osmPrimitive.get(key), row, 2);
                     }
-                    panel.add(new JSeparator(), gbc);
-                    panel.add(new JLabel(tr("Changes for {0}", id)), gbc);
-                    panel.add(new JScrollPane(table), gbc);
+                    panel.add(new JSeparator(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+                    panel.add(new JLabel(tr("Changes for {0}", id)), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+                    panel.add(new JScrollPane(table), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
                 }
             }
         }
