@@ -1,6 +1,3 @@
-README 
-======
-
 # Usage
 ## Download MapRoulette Tasks
 There are two methods to download tasks from MapRoulette.
@@ -16,7 +13,9 @@ There are two methods to download tasks from MapRoulette.
    `Already Fixed/Not an issue`, or `Skipped`; some options are hidden in drop-down menus).
 5. Uploading a changeset or `Stop Task` will then upload the task status.
 
-If a task specifies an OSM primitive
+If a task specifies an OSM primitive, and you have modified a primitive specified
+by the task, you will be asked if you have fixed the problem _even if you haven't
+locked the task_ when you upload the changed primitive.
 
 # Author
 * Taylor Smock <tsmock@meta.com>
