@@ -55,6 +55,7 @@ import org.openstreetmap.josm.plugins.maproulette.gui.task.current.CurrentTaskPa
 import org.openstreetmap.josm.plugins.maproulette.gui.widgets.DefaultPanelListCellRenderer;
 import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -327,6 +328,7 @@ public final class TaskListPanel extends ToggleDialog
          */
         @Serial
         private static final long serialVersionUID = -4078764340309276574L;
+        private MapRouletteDownloadTaskBox task;
 
         /**
          * Create a new action
@@ -340,8 +342,7 @@ public final class TaskListPanel extends ToggleDialog
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            this.setEnabled(false); // Keep the user from hitting the download button multiple times in short order
-            MainApplication.worker.execute(this::download);
+            this.switchType(true);
         }
 
         /**
@@ -349,9 +350,30 @@ public final class TaskListPanel extends ToggleDialog
          */
         private void download() {
             final var bounds = MainApplication.getMap().mapView.getState().getViewArea().getLatLonBoundsBox();
-            new MapRouletteDownloadTaskBox().download(new DownloadParams().withNewLayer(false), bounds,
-                    NullProgressMonitor.INSTANCE);
-            MainApplication.worker.submit(() -> GuiHelper.runInEDT(() -> this.setEnabled(true)));
+            final var task2 = new MapRouletteDownloadTaskBox();
+            task2.download(new DownloadParams().withNewLayer(false), bounds, NullProgressMonitor.INSTANCE);
+            synchronized (this) {
+                if (this.task != null) {
+                    this.task.cancel();
+                }
+                this.task = task2;
+            }
+            MainApplication.worker.submit(() -> GuiHelper.runInEDT(() -> this.switchType(false)));
+        }
+
+        private void switchType(boolean performDownload) {
+            if (performDownload && this.task == null) {
+                MainApplication.worker.execute(this::download);
+                new ImageProvider("cancel").getResource().attachImageIcon(this);
+                this.putValue(NAME, tr("Cancel"));
+            } else {
+                if (this.task != null) {
+                    this.task.cancel();
+                    this.task = null;
+                }
+                this.putValue(NAME, tr("Download Data"));
+                new ImageProvider("download").getResource().attachImageIcon(this);
+            }
         }
     }
 

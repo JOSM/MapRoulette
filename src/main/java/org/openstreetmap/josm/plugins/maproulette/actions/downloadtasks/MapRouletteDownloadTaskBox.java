@@ -66,6 +66,7 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
         private final Bounds bounds;
         private final DownloadParams settings;
         private TaskClusteredPoint[] tasks;
+        private boolean cancelled;
 
         protected DownloadTask(DownloadParams settings, Bounds downloadArea, ProgressMonitor progressMonitor) {
             super(tr("Downloading MapRoulette Data"), progressMonitor, false);
@@ -76,6 +77,8 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
         @Override
         protected void cancel() {
             // We don't support cancelling right now
+            this.getProgressMonitor().cancel();
+            this.cancelled = true;
         }
 
         @Override
@@ -84,8 +87,10 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
                 tasks = TaskAPI.box(bounds.getMinLon(), bounds.getMinLat(), bounds.getMaxLon(), bounds.getMaxLat(),
                         1_000, 0, true, null, null, false, true, true);
                 for (var task : tasks) {
-                    // Force cache the challenges
-                    TaskCache.isHidden(task);
+                    if (!this.cancelled && !this.getProgressMonitor().isCanceled()) {
+                        // Force cache the challenges
+                        TaskCache.isHidden(task);
+                    }
                 }
             } catch (UnauthorizedException unauthorizedException) {
                 ExceptionDialogUtil.explainException(unauthorizedException);
@@ -103,7 +108,7 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
 
         @Override
         protected void finish() {
-            if (tasks != null) {
+            if (tasks != null && !this.cancelled && !this.getProgressMonitor().isCanceled()) {
                 final var taskList = new ArrayList<>(Arrays.asList(tasks));
                 final var tcMap = taskList.stream().collect(Collectors.toMap(TaskClusteredPoint::id, i -> i));
                 final var currentLayers = MainApplication.getLayerManager()
