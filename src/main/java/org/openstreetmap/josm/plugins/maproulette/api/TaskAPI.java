@@ -119,6 +119,7 @@ public final class TaskAPI {
      * @param task The task to start
      * @return The updated task
      * @throws IOException if there was a problem communicating with the server
+     * @throws UnauthorizedException If we aren't authorized for the server
      */
     public static Task start(long task) throws IOException {
         final var client = HttpClientUtils.get(getBaseUrl() + TASK + "/" + task + "/start");

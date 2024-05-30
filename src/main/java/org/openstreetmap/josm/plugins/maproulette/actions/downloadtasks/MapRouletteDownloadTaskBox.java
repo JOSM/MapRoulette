@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.actions.downloadtasks;
 
-import static org.openstreetmap.josm.plugins.maproulette.config.MapRouletteConfig.getBaseUrl;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.IOException;
@@ -12,21 +11,14 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
 import org.openstreetmap.josm.actions.downloadtasks.AbstractDownloadTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.UserIdentityManager;
-import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
+import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
-import org.openstreetmap.josm.gui.preferences.server.ServerAccessPreference;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressTaskId;
-import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmApiException;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
@@ -96,18 +88,7 @@ public class MapRouletteDownloadTaskBox extends AbstractDownloadTask<TaskCluster
                     TaskCache.isHidden(task);
                 }
             } catch (UnauthorizedException unauthorizedException) {
-                final var message = UserIdentityManager.getInstance().isAnonymous()
-                        ? tr("Please log in to OpenStreetMap in JOSM")
-                        : tr("Please log in to the MapRoulette instance at least once: {0}", getBaseUrl());
-                GuiHelper.runInEDT(() -> {
-                    ConditionalOptionPaneUtil.showMessageDialog("maproulette.user.not.logged.in",
-                            MainApplication.getMainFrame(), message, message, JOptionPane.ERROR_MESSAGE);
-                    if (UserIdentityManager.getInstance().isAnonymous()) {
-                        final var p = new PreferenceDialog(MainApplication.getMainFrame());
-                        SwingUtilities.invokeLater(() -> p.selectPreferencesTabByClass(ServerAccessPreference.class));
-                        p.setVisible(true);
-                    }
-                });
+                ExceptionDialogUtil.explainException(unauthorizedException);
                 // This is specifically so that user's don't get a bug report message
                 final var transferException = new OsmApiException(unauthorizedException);
                 transferException.setUrl(MapRouletteConfig.getBaseUrl());

@@ -8,29 +8,23 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.Serial;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.IPrimitive;
-import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
-import org.openstreetmap.josm.plugins.maproulette.api.UnauthorizedException;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
 import org.openstreetmap.josm.plugins.maproulette.gui.layer.MapRouletteClusteredPointLayer;
 import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -77,7 +71,6 @@ final class LockUnlockTaskAction extends JosmAction {
         final var selected = this.table.getSelectionModel().getSelectedIndices();
         final var model = (TaskTableModel) this.table.getModel();
         final var selectedTasks = new ArrayList<Task>();
-        final var messages = new HashSet<String>();
         for (int index : selected) {
             try {
                 final var i = table.getRowSorter().convertRowIndexToModel(index);
@@ -85,17 +78,9 @@ final class LockUnlockTaskAction extends JosmAction {
                 final var lockedTask = TaskAPI.start(task.id());
                 ModifiedObjects.addLockedTask(lockedTask);
                 selectedTasks.add(lockedTask);
-            } catch (UnauthorizedException unauthorizedException) {
-                Logging.trace(unauthorizedException);
-                messages.add(unauthorizedException.getMessage());
             } catch (IOException e) {
                 ExceptionDialogUtil.explainException(e);
             }
-        }
-        if (!messages.isEmpty()) {
-            ConditionalOptionPaneUtil.showMessageDialog("maproulette.tasks.locked", MainApplication.getMainFrame(),
-                    "<html>" + messages.stream().sorted().collect(Collectors.joining("<br>")) + "</html>",
-                    tr("Could not lock tasks"), JOptionPane.INFORMATION_MESSAGE);
         }
 
         ((TaskTableModel) this.table.getModel()).fireTableDataChanged();
