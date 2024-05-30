@@ -19,7 +19,6 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
-import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
 import org.openstreetmap.josm.plugins.maproulette.gui.layer.MapRouletteClusteredPointLayer;
@@ -112,7 +111,7 @@ final class LockUnlockTaskAction extends JosmAction {
                 final var unlockedTask = TaskAPI.release(cluster.id());
                 if (task != null && task.id() == unlockedTask.id()) {
                     final var modified = ModifiedObjects.getModifiedTask(task.id());
-                    if (modified != null && modified.status() != TaskStatus.FIXED) {
+                    if (modified != null) {
                         TaskAPI.updateStatus(task.id(), modified.status(), modified.comment(), modified.tags(),
                                 modified.reviewRequested(), modified.completionResponses());
                         ModifiedObjects.removeModifiedTask(modified);

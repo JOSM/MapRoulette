@@ -107,8 +107,8 @@ public final class EarlyUploadHook implements UploadHook {
                 final var descriptivePanel = createDescriptivePanel(task, apiDataSet);
                 final var didFix = ConditionalOptionPaneUtil.showConfirmationDialog(PREF_CHECK_IF_FINISHED,
                         MainApplication.getMainFrame(), descriptivePanel,
-                        tr("Did you finish the following MapRoulette Task?"), JOptionPane.YES_NO_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION);
+                        tr("Did you finish the following MapRoulette Task: {0}?", task.id()),
+                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION);
                 if (didFix) {
                     final var doc = (HTMLDocument) ((JosmEditorPane) descriptivePanel.getComponent(1)).getDocument();
                     ModifiedObjects.addModifiedTask(
