@@ -49,8 +49,8 @@ public class TaskListPanelTest {
                         .getComponent(0 /* A panel */)).getComponent(2 /* The table */));
         final var menu = table.getComponentPopupMenu();
         final var menuItem = (JMenuItem) switch (ignoreType) {
-        case IGNORE_TASK -> menu.getComponent(1);
-        case IGNORE_CHALLENGE -> menu.getComponent(2);
+        case IGNORE_TASK -> menu.getComponent(2);
+        case IGNORE_CHALLENGE -> menu.getComponent(3);
         };
         menu.setInvoker(table);
         final var action = menuItem.getAction();

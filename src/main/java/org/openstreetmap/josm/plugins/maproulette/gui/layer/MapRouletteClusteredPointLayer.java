@@ -45,6 +45,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.mappaint.mapcss.MapCSSStyleSource;
 import org.openstreetmap.josm.gui.mappaint.styleelement.MapImage;
 import org.openstreetmap.josm.gui.mappaint.styleelement.Symbol;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.maproulette.api.MRColors;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Identifier;
@@ -157,6 +158,7 @@ public class MapRouletteClusteredPointLayer extends Layer implements MouseListen
         final Map<Long, TaskClusteredPoint> updateCollection = this.pointBucket.stream()
                 .collect(Collectors.toMap(Identifier::id, c -> c));
         this.updatedDataListeners.fireEvent(consumer -> consumer.accept(updateCollection));
+        GuiHelper.runInEDT(this::invalidate);
     }
 
     @Override

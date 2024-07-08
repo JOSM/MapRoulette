@@ -37,6 +37,7 @@ import org.openstreetmap.josm.gui.layer.LayerManager;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.FilterField;
+import org.openstreetmap.josm.plugins.maproulette.actions.DownloadTasks;
 import org.openstreetmap.josm.plugins.maproulette.actions.GoToTaskLocation;
 import org.openstreetmap.josm.plugins.maproulette.actions.IgnoreAction;
 import org.openstreetmap.josm.plugins.maproulette.actions.downloadtasks.MapRouletteDownloadTaskBox;
@@ -125,6 +126,7 @@ public final class TaskListPanel extends ToggleDialog
             layers.forEach(MapRouletteClusteredPointLayer::invalidate);
         });
         menu.add(new GoToTaskLocation());
+        menu.add(new DownloadTasks());
         menu.add(new IgnoreAction(IgnoreAction.IgnoreType.IGNORE_TASK));
         menu.add(new IgnoreAction(IgnoreAction.IgnoreType.IGNORE_CHALLENGE));
         table.setComponentPopupMenu(menu);
