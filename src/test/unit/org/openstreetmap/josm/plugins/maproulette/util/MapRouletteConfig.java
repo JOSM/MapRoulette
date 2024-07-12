@@ -12,17 +12,19 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.common.FileSource;
-import com.github.tomakehurst.wiremock.extension.Parameters;
-import com.github.tomakehurst.wiremock.extension.ResponseDefinitionTransformer;
+import com.github.tomakehurst.wiremock.extension.ResponseDefinitionTransformerV2;
 import com.github.tomakehurst.wiremock.http.Body;
 import com.github.tomakehurst.wiremock.http.ContentTypeHeader;
-import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
@@ -43,7 +45,7 @@ public @interface MapRouletteConfig {
          */
         private static String getDirectory() {
             final var basePath = Paths.get("src", "test", "resources");
-            final var maproulette = Path.of("maproulette");
+            final var maproulette = Path.of("MapRoulette");
             if (Files.isDirectory(maproulette) && Files.isDirectory(maproulette.resolve(basePath))) {
                 return maproulette.resolve(basePath).toString();
             }
@@ -52,7 +54,7 @@ public @interface MapRouletteConfig {
 
         public Extension() {
             super(extensionOptions().options(options().dynamicPort().usingFilesUnderDirectory(getDirectory())
-                    .extensions(new MapRouletteExtension())));
+                    .extensions(services -> List.of(new MapRouletteExtension(services.getFiles())))));
         }
 
         @Override
@@ -82,11 +84,18 @@ public @interface MapRouletteConfig {
     /**
      * A wiremock extension that allows us to return responses for maproulette APIs
      */
-    class MapRouletteExtension extends ResponseDefinitionTransformer {
+    class MapRouletteExtension implements ResponseDefinitionTransformerV2 {
+        private final FileSource files;
+
+        public MapRouletteExtension(FileSource files) {
+            Objects.requireNonNull(files, "files");
+            this.files = files;
+        }
 
         @Override
-        public ResponseDefinition transform(Request request, ResponseDefinition responseDefinition, FileSource files,
-                Parameters parameters) {
+        public ResponseDefinition transform(ServeEvent serveEvent) {
+            final LoggedRequest request = serveEvent.getRequest();
+            final ResponseDefinition responseDefinition = serveEvent.getResponseDefinition();
             if (request.getUrl().startsWith("/api/v2/task/") && request.getUrl().matches("/api/v2/task/\\d+")) {
                 final var file = files.getTextFileNamed(request.getUrl().substring(1) + "/start");
                 if (file != null) {
@@ -105,11 +114,6 @@ public @interface MapRouletteConfig {
         @Override
         public String getName() {
             return "MapRouletteExtension";
-        }
-
-        @Override
-        public boolean applyGlobally() {
-            return super.applyGlobally();
         }
     }
 }
