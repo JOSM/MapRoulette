@@ -1,67 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.openstreetmap.josm.plugins</groupId>
+    <parent>
+        <groupId>org.openstreetmap.josm.plugins</groupId>
+        <artifactId>plugin-root</artifactId>
+        <version>SNAPSHOT</version>
+    </parent>
     <artifactId>maproulette</artifactId>
-    <version>SNAPSHOT</version>
-    <repositories>
-        <repository>
-            <id>JOSM-releases</id>
-            <url>https://josm.openstreetmap.de/nexus/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>JOSM-snapshots</id>
-            <url>https://josm.openstreetmap.de/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <plugin.src.dir>${project.basedir}/src/main/java</plugin.src.dir>
+        <plugin.resources.dir>${project.basedir}/src/main/resources</plugin.resources.dir>
+        <plugin.test.dir>${project.basedir}/src/test/</plugin.test.dir>
+        <plugin.test.data.dir>${plugin.test.dir}/resources</plugin.test.data.dir>
+    </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.openstreetmap.josm</groupId>
-            <artifactId>josm</artifactId>
-            <version>18905</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openstreetmap.josm</groupId>
-            <artifactId>josm-unittest</artifactId>
-            <version>SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wiremock</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>3.6.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>5.10.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
-            <version>1.49.a</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-jcs3-core</artifactId>
-            <version>3.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.json</groupId>
-            <artifactId>jakarta.json-api</artifactId>
-            <version>2.1.3</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
@@ -74,7 +27,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
                 <configuration>
                     <release>17</release>
                 </configuration>
