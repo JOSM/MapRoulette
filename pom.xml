@@ -23,6 +23,16 @@
     <plugin.minimum.java.version>${java.lang.version}</plugin.minimum.java.version>
     <plugin.canloadatruntime>true</plugin.canloadatruntime>
   </properties>
+  <repositories>
+    <repository>
+      <id>JOSM-releases</id>
+      <url>https://josm.openstreetmap.de/nexus/content/repositories/releases/</url>
+    </repository>
+    <repository>
+      <id>JOSM-snapshots</id>
+      <url>https://josm.openstreetmap.de/nexus/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.commonmark</groupId>

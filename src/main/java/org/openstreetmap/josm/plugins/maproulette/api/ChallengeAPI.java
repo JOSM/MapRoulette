@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import org.openstreetmap.josm.plugins.maproulette.api.enums.Priority;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Challenge;
@@ -231,6 +232,21 @@ public final class ChallengeAPI {
             try (var inputstream = client.connect().getContent()) {
                 return parseChallenge(inputstream);
             }
+        } finally {
+            client.disconnect();
+        }
+    }
+
+    /**
+     * Get tasks from a MapRoulette challenge
+     * @param challengeId The id of the challenge
+     * @return The tasks from the challenge -- see {@link TaskParser#parseTask(InputStream)}
+     * @throws IOException if there was a problem communicating with the server
+     */
+    public static Object view(long challengeId) throws IOException {
+        final var client = get(getBaseUrl() + PATH + "/view/" + challengeId, Map.of("status", "0"));
+        try (var inputstream = client.connect().getContent()) {
+            return TaskParser.parseTask(inputstream);
         } finally {
             client.disconnect();
         }

@@ -10,6 +10,7 @@ import org.openstreetmap.josm.gui.download.OSMDownloadSource;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.maproulette.actions.downloadtasks.MapRouletteDownloadChallengeTask;
 import org.openstreetmap.josm.plugins.maproulette.actions.downloadtasks.MapRouletteDownloadTask;
 import org.openstreetmap.josm.plugins.maproulette.api.TaskAPI;
 import org.openstreetmap.josm.plugins.maproulette.gui.ModifiedObjects;
@@ -36,6 +37,7 @@ public class MapRoulette extends Plugin {
         UploadAction.registerUploadHook(new LateUploadHook(), true);
         OSMDownloadSource.addDownloadType(new MapRouletteDownloadSource());
         MainApplication.getMenu().openLocation.addDownloadTaskClass(MapRouletteDownloadTask.class);
+        MainApplication.getMenu().openLocation.addDownloadTaskClass(MapRouletteDownloadChallengeTask.class);
     }
 
     @Override
