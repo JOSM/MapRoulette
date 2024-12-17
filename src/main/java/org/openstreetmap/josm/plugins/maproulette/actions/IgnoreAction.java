@@ -32,16 +32,25 @@ public class IgnoreAction extends JosmAction {
     private final IgnoreType type;
 
     /**
+     * Generate shortcuts in a manner friendly for the ShortcutsList
+     * @param type The type
+     * @return The shortcut
+     */
+    private static Shortcut generateShortcut(IgnoreType type) {
+        return switch (type) {
+            case IGNORE_TASK -> Shortcut.registerShortcut("maproulette:ignore.ignore_task", tr("MapRoulette: Ignore Task"), KeyEvent.CHAR_UNDEFINED, Shortcut.NONE);
+            case IGNORE_CHALLENGE -> Shortcut.registerShortcut("maproulette:ignore.ignore_challenge", tr("MapRoulette: Ignore Challenge"), KeyEvent.CHAR_UNDEFINED, Shortcut.NONE);
+        };
+    }
+
+    /**
      * Create a new action object
      *
      * @param type The type of object we are ignoring
      */
     public IgnoreAction(IgnoreType type) {
         super(tr(type.getButtonText()), "dialogs/fix", tr(type.getButtonText()),
-                Shortcut.registerShortcut(
-                        /* NO-SHORTCUT */ "maproulette:ignore." + type.name().toLowerCase(Locale.ROOT),
-                        tr("MapRoulette: {0}", tr(type.getButtonText())), KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
-                false);
+                generateShortcut(type), false);
         this.type = type;
     }
 
@@ -68,9 +77,7 @@ public class IgnoreAction extends JosmAction {
      * The ignore type
      */
     public enum IgnoreType {
-        /* SHORTCUT(MapRoulette: Ignore Task, maproulette:ignore.task, NONE, UNDEFINED) */
         IGNORE_TASK(marktr("Ignore Task")),
-        /* SHORTCUT(MapRoulette: Ignore Challenge, maproulette:ignore.challenge, NONE, UNDEFINED) */
         IGNORE_CHALLENGE(marktr("Ignore Challenge"));
 
         private final String buttonText;
