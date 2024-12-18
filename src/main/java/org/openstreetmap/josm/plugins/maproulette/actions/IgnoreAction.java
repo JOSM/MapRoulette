@@ -38,8 +38,8 @@ public class IgnoreAction extends JosmAction {
      */
     public IgnoreAction(IgnoreType type) {
         super(tr(type.getButtonText()), "dialogs/fix", tr(type.getButtonText()),
-                Shortcut.registerShortcut(
-                        /* NO-SHORTCUT */ "maproulette:ignore." + type.name().toLowerCase(Locale.ROOT),
+                Shortcut.registerShortcut( /* NO-SHORTCUT */
+                        "maproulette:ignore." + type.name().toLowerCase(Locale.ROOT),
                         tr("MapRoulette: {0}", tr(type.getButtonText())), KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
                 false);
         this.type = type;
