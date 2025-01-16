@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.gui.task.current;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
@@ -119,6 +120,11 @@ public final class CurrentTaskPanel extends ToggleDialog {
         this.panel.add(this.instructionPane, gbc);
         this.panel.add(this.cooperativeWork, gbc);
         super.createLayout(this.panel.getVerticalScrollPane(), false, sideButtons);
+    }
+
+    @Override
+    public String helpTopic() {
+        return ht("/Dialog/CurrentMapRouletteTask");
     }
 
     private static void showPopupMenu(Component parent, Object... menuItems) {
@@ -345,6 +351,7 @@ abstract static class InnerAction extends JosmAction {
      */
     protected InnerAction(String name, String iconName, String tooltip, Shortcut shortcut, boolean registerInToolbar) {
         super(name, iconName, tooltip, shortcut, registerInToolbar, true);
+        putValue("help", ht("/Dialog/MapRouletteCurrentTask"));
     }
 
     @Override
@@ -371,6 +378,7 @@ private static class SelectOsmPrimitives extends InnerAction {
                 false);
         Objects.requireNonNull(taskSupplier);
         this.taskSuppler = taskSupplier;
+        putValue("help", ht("/Dialog/MapRouletteCurrentTask#SelectOsmPrimitives"));
     }
 
     @Override

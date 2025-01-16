@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.actions;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ public class DownloadTasks extends JosmAction {
                         tr("MapRoulette: Download additional tasks from challenge"), KeyEvent.CHAR_UNDEFINED,
                         Shortcut.NONE),
                 false);
+        putValue("help", ht("/Dialog/MapRouletteDownloadTasks"));
     }
 
     @Override

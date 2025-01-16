@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.gui.task.list;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -51,6 +52,7 @@ final class LockUnlockTaskAction extends JosmAction {
                         KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
                 false);
         Objects.requireNonNull(table, "table");
+        putValue("help", ht("/Dialog/MapRouletteStartTask"));
         this.table = table;
     }
 

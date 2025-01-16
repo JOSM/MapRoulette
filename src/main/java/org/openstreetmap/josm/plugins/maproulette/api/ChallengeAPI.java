@@ -41,10 +41,6 @@ public final class ChallengeAPI {
      * The base path for challenge requests
      */
     private static final String PATH = "/challenge";
-    /**
-     * The base path for challenges requests
-     */
-    private static final String PATHS = PATH + "s";
 
     /**
      * Don't allow the API object to be instantiated

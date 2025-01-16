@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
  * @param parentId           The id of the parent
  * @param parentName         The name of the parent
  * @param location           The location of the task
- * @param bounding
+ * @param bounding           The bounds
  * @param blurb              The first line of the task instructions
  * @param modified           When the task was last modified
  * @param difficulty         The difficulty (only if a challenge)
@@ -33,7 +33,7 @@ import jakarta.annotation.Nullable;
  * @param mappedOn           The time the task was mapped
  * @param completedTimeSpent The amount of time from when the task was locked to when it was mapped
  * @param completedBy        Who completed the task
- * @param pointReview
+ * @param pointReview        Review information
  * @param priority           The priority of the task
  * @param bundleId           The bundle for this task
  * @param isBundlePrimary    If the bundle is the primary bundle

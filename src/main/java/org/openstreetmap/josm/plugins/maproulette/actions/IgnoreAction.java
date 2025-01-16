@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.maproulette.actions;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -42,6 +43,7 @@ public class IgnoreAction extends JosmAction {
                         "maproulette:ignore." + type.name().toLowerCase(Locale.ROOT),
                         tr("MapRoulette: {0}", tr(type.getButtonText())), KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
                 false);
+        putValue("help", ht("/Action/MapRouletteIgnore"));
         this.type = type;
     }
 
