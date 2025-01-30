@@ -10,9 +10,14 @@ on:
     branches:
       - master
       - $default-branch
-  schedule:
-  - cron: "43 13 * * 1"
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  attestations: write
+  contents: write
+  packages: write
+  checks: write
 
 jobs:
   check-release-needed:
@@ -31,23 +36,27 @@ jobs:
           last_tag=$(git describe --tags --abbrev=0 --always)
           release_needed="false"
           for file in $(git diff ${last_tag}..HEAD --name-only); do
-            if [[ $file = "src/main"* ]]; then
+            if [[ $file = "src/main/"* ]] || [[ $file = "data/"* ]]; then
               release_needed="true"
               break
             fi
           done
           echo "release_needed=$release_needed" >> $GITHUB_OUTPUT
 
-
   call-workflow:
     needs: check-release-needed
     strategy:
       matrix:
-        josm-revision: ["", "r18877"]
-    uses: JOSM/JOSMPluginAction/.github/workflows/ant.yml@v2
+        josm-revision: ["", "r19044"]
+    uses: JOSM/JOSMPluginAction/.github/workflows/ant.yml@v3
     with:
       josm-revision: ${{ matrix.josm-revision }}
       java-version: 17
-      perform-revision-tagging: ${{  matrix.josm-revision == 'r18877' && needs.check-release-needed.outputs.release_needed == 'true' }}
+      perform-revision-tagging: ${{ github.repository == 'JOSM/MapRoulette' && github.ref_type == 'branch' && github.ref_name == 'master' && github.event_name != 'schedule' && github.event_name != 'pull_request' && matrix.josm-revision == 'r19044' }}
     secrets: inherit
-
+    permissions:
+      attestations: write
+      checks: write
+      contents: write
+      deployments: write
+      id-token: write
