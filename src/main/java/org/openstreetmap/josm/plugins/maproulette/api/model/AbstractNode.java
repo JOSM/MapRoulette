@@ -106,16 +106,6 @@ public interface AbstractNode extends INode {
     }
 
     @Override
-    default Date getTimestamp() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    default void setTimestamp(Date timestamp) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     default Instant getInstant() {
         throw new UnsupportedOperationException();
     }
