@@ -47,7 +47,7 @@ jobs:
     needs: check-release-needed
     strategy:
       matrix:
-        josm-revision: ["", "r19044"]
+        josm-revision: ["", "r19330"]
     uses: JOSM/JOSMPluginAction/.github/workflows/ant.yml@v3
     with:
       josm-revision: ${{ matrix.josm-revision }}
