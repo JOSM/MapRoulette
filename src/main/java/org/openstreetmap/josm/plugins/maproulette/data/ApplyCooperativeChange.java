@@ -81,7 +81,7 @@ public class ApplyCooperativeChange {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && this.getClass().equals(obj.getClass())
+        return obj != null && obj instanceof ApplyCooperativeChange
                 && this.change.equals(((ApplyCooperativeChange) obj).change);
     }
 }

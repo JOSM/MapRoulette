@@ -316,6 +316,7 @@ public class MapRouletteClusteredPointLayer extends Layer implements MouseListen
      *
      * @param points The points to set as selected
      */
+    @SuppressWarnings("UndefinedEquals")
     private void setSelected(Collection<TaskClusteredPoint> points) {
         final var lastSelected = new HashSet<>(this.selected);
         this.selected.clear();

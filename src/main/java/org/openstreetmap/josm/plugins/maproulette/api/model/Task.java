@@ -99,6 +99,7 @@ public record Task(long id, @Nonnull String name, @Nonnull Instant created, @Non
      *
      * @return The cooperative work
      */
+    @SuppressWarnings("unchecked")
     public Pair<DataSet, NoteData> cooperativeWorkAsOsc() {
         if (isCooperativeWorkOsc()) {
             return (Pair<DataSet, NoteData>) this.cooperativeWork;
