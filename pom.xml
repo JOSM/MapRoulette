@@ -10,7 +10,7 @@
   <version>SNAPSHOT</version>
   <properties>
     <java.lang.version>17</java.lang.version>
-    <plugin.main.version>19044</plugin.main.version>
+    <plugin.main.version>19330</plugin.main.version>
     <plugin.src.dir>${project.basedir}/src/main/java</plugin.src.dir>
     <plugin.resources.dir>${project.basedir}/src/main/resources</plugin.resources.dir>
     <plugin.test.dir>${project.basedir}/src/test/</plugin.test.dir>
