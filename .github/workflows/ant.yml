@@ -52,7 +52,7 @@ jobs:
     with:
       josm-revision: ${{ matrix.josm-revision }}
       java-version: 17
-      perform-revision-tagging: ${{ github.repository == 'JOSM/MapRoulette' && github.ref_type == 'branch' && github.ref_name == 'master' && github.event_name != 'schedule' && github.event_name != 'pull_request' && matrix.josm-revision == 'r19044' }}
+      perform-revision-tagging: ${{ github.repository == 'JOSM/MapRoulette' && github.ref_type == 'branch' && github.ref_name == 'master' && github.event_name != 'schedule' && github.event_name != 'pull_request' && matrix.josm-revision == 'r19330' }}
     secrets: inherit
     permissions:
       attestations: write
