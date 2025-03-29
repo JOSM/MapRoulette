@@ -4,11 +4,21 @@
   <parent>
     <groupId>org.openstreetmap.josm.plugins</groupId>
     <artifactId>plugin-root</artifactId>
-    <version>SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>maproulette</artifactId>
-  <version>SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <properties>
+    <plugin.src.dir>${project.basedir}/src/main/java</plugin.src.dir>
+    <plugin.test.dir>${project.basedir}/src/test/unit</plugin.test.dir>
+    <plugin.resources.dir>${project.basedir}/src/main/resources</plugin.resources.dir>
+    <plugin.main.version>19044</plugin.main.version>
+    <plugin.author>Taylor Smock</plugin.author>
+    <plugin.class>org.openstreetmap.josm.plugins.maproulette.MapRoulette</plugin.class>
+    <plugin.description>MapRoulette Tasks in JOSM</plugin.description>
+    <plugin.icon>images/dialogs/user_no_image.png</plugin.icon>
+    <plugin.link>https://github.com/JOSM/MapRoulette</plugin.link>
+    <plugin.canloadatruntime>true</plugin.canloadatruntime>
     <java.lang.version>17</java.lang.version>
     <plugin.main.version>19330</plugin.main.version>
     <plugin.src.dir>${project.basedir}/src/main/java</plugin.src.dir>
@@ -43,6 +53,19 @@
   </dependencies>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Plugin-Link>${plugin.link}</Plugin-Link>
+              <Plugin-Icon>${plugin.icon}</Plugin-Icon>
+              <Plugin-Canloadatruntime>${plugin.canloadatruntime}</Plugin-Canloadatruntime>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
