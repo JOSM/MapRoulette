@@ -23,6 +23,7 @@ import org.openstreetmap.josm.plugins.maproulette.gui.TaskListPanelTest;
 import org.openstreetmap.josm.plugins.maproulette.gui.task.list.TaskListPanel;
 import org.openstreetmap.josm.plugins.maproulette.util.MapRouletteConfig;
 import org.openstreetmap.josm.testutils.annotations.BasicPreferences;
+import org.openstreetmap.josm.testutils.annotations.HTTP;
 import org.openstreetmap.josm.testutils.annotations.Main;
 import org.openstreetmap.josm.testutils.annotations.Projection;
 
@@ -33,6 +34,7 @@ import mockit.MockUp;
  * Test class for {@link MapRouletteClusteredPointLayer}
  */
 @BasicPreferences
+@HTTP
 @Main
 @MapRouletteConfig
 @Projection
