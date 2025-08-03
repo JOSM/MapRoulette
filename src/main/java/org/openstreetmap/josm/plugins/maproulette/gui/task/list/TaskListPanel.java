@@ -225,7 +225,7 @@ public final class TaskListPanel extends ToggleDialog
     public void accept(Collection<TaskClusteredPoint> selected) {
         final int[] toSelect = selected.stream().mapToInt(((TaskTableModel) table.getModel())::indexOf)
                 .filter(i -> i >= 0).map(i -> table.getRowSorter().convertRowIndexToView(i)).sorted().distinct()
-                .toArray();
+                .filter(i -> i >= 0).toArray();
         final var selModel = table.getSelectionModel();
         selModel.clearSelection();
         for (int i : toSelect) { // Not ideal. Probably won't be a perf issue though.
