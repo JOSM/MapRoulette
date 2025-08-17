@@ -23,6 +23,8 @@ import org.openstreetmap.josm.plugins.maproulette.api.model.ChallengePriority;
 import org.openstreetmap.josm.plugins.maproulette.api.model.Task;
 import org.openstreetmap.josm.plugins.maproulette.api.parsers.PointParser;
 import org.openstreetmap.josm.plugins.maproulette.api.parsers.TaskParser;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
+import org.openstreetmap.josm.tools.bugreport.BugReport;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -231,6 +233,8 @@ public final class ChallengeAPI {
             try (var inputstream = client.connect().getContent()) {
                 return parseChallenge(inputstream);
             }
+        } catch (ClassCastException cce) {
+            throw BugReport.intercept(cce).put("Maproulette Challenge:", challengeId);
         } finally {
             client.disconnect();
         }
