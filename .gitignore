@@ -4,3 +4,5 @@ lib
 target
 /test/
 /bin/
+dependency-reduced-pom.xml
+/src/test/config/
