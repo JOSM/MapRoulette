@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -170,6 +171,12 @@ public final class TaskParser {
                                             Map.Entry::getKey, entry -> ((JsonString) entry.getValue()).getString()));
                             modifies.add(new ElementUpdate(id.getUniqueId(), id.getType(), Integer.MIN_VALUE,
                                     new ElementTagChange(elemData, new String[0])));
+                        } else if ("unsetTags".equals(elemType)) {
+                            final var elemData = elemOp.getJsonArray("data").stream()
+                                    .filter(JsonString.class::isInstance).map(JsonString.class::cast)
+                                    .map(JsonString::getString).toArray(String[]::new);
+                            modifies.add(new ElementUpdate(id.getUniqueId(), id.getType(), Integer.MIN_VALUE,
+                                    new ElementTagChange(Collections.emptyMap(), elemData)));
                         } else {
                             throw new IllegalArgumentException(object.toString());
                         }

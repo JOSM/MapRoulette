@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.openstreetmap.josm.plugins.maproulette.util.RecordAssertion.assertRecordsEqual;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -40,9 +41,12 @@ class TaskParserTest {
                 Instant.parse("2022-08-06T15:23:36.531Z"), 24092, "", new Point(36.0819446365856, -119.104608317353),
                 task.geometries(),
                 new OSMChange(new ElementCreate[0],
-                        new ElementUpdate[] { new ElementUpdate(131190351L, OsmPrimitiveType.WAY, Integer.MIN_VALUE,
-                                new ElementTagChange(Map.of("landuse", "farmland", "FMMP_modified", "yes"),
-                                        new String[0])) }),
+                        new ElementUpdate[] {
+                                new ElementUpdate(131190351L, OsmPrimitiveType.WAY, Integer.MIN_VALUE,
+                                        new ElementTagChange(Map.of("landuse", "farmland", "FMMP_modified", "yes"),
+                                                new String[0])),
+                                new ElementUpdate(131190351L, OsmPrimitiveType.WAY, Integer.MIN_VALUE,
+                                        new ElementTagChange(Collections.emptyMap(), new String[] { "source" })) }),
                 TaskStatus.CREATED, null, null, null,
                 new TaskReviewFields(null, null, null, null, null, null, null, null, null, null), 0, -1L, null, null,
                 false, null, "");

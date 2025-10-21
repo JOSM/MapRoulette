@@ -53,13 +53,13 @@ public final class RecordAssertion {
                 final var method = component.getAccessor();
                 final var expectedObj = method.invoke(expected);
                 final var actualObj = method.invoke(actual);
-                if (expectedObj instanceof Record && actualObj instanceof Record
-                        && expectedObj.getClass().equals(actualObj.getClass())) {
+                final var sameClass = actualObj != null && expectedObj != null
+                        && expectedObj.getClass().equals(actualObj.getClass());
+                if (expectedObj instanceof Record && actualObj instanceof Record && sameClass) {
                     executableList.add(
                             () -> assertRecordsEqual((Record) expectedObj, (Record) actualObj, component.getName()));
                 } else if (expectedObj instanceof Object[] expectedArray && actualObj instanceof Object[] actualArray) {
-                    if (expectedObj.getClass().getComponentType().isRecord()
-                            && expectedObj.getClass().equals(actualObj.getClass())) {
+                    if (expectedObj.getClass().getComponentType().isRecord() && sameClass) {
                         executableList
                                 .add(() -> assertEquals(expectedArray.length, actualArray.length, component.getName()));
                         if (expectedArray.length == actualArray.length) {
