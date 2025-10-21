@@ -53,6 +53,7 @@ import org.openstreetmap.josm.plugins.maproulette.util.ExceptionDialogUtil;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.bugreport.BugReport;
 
 /**
  * An early upload hook for setting the changeset tags (for review by user)
@@ -83,6 +84,15 @@ public final class EarlyUploadHook implements UploadHook {
 
     @Override
     public boolean checkUpload(APIDataSet apiDataSet) {
+        try {
+            return realCheckUpload(apiDataSet);
+        } catch (RuntimeException exception) {
+            BugReport.intercept(exception).warn();
+        }
+        return true;
+    }
+
+    private boolean realCheckUpload(APIDataSet apiDataSet) {
         final var ids = apiDataSet.getPrimitives().stream().map(IPrimitive::getPrimitiveId).collect(Collectors.toSet());
         //noinspection DataFlowIssue -- getPrimitiveId should stably return either a null value or a non-null value
         final var tasks = MainApplication.getLayerManager().getLayersOfType(MapRouletteClusteredPointLayer.class)
