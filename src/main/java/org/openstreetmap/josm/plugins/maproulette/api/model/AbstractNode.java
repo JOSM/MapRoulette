@@ -18,6 +18,7 @@ import org.openstreetmap.josm.data.osm.OsmData;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.visitor.PrimitiveVisitor;
+import org.openstreetmap.josm.gui.mappaint.ElemStyles;
 import org.openstreetmap.josm.gui.mappaint.StyleCache;
 
 /**
@@ -243,24 +244,27 @@ public interface AbstractNode extends INode {
     }
 
     @Override
-    default StyleCache getCachedStyle() {
+    default StyleCache getCachedStyle(ElemStyles elemStyles) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    default void setCachedStyle(StyleCache mappaintStyle) {
+    default void setCachedStyle(ElemStyles elemStyles, StyleCache mappaintStyle) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    default boolean isCachedStyleUpToDate() {
+    default boolean isCachedStyleUpToDate(ElemStyles elemStyles) {
         return false;
     }
 
     @Override
-    default void declareCachedStyleUpToDate() {
+    default void declareCachedStyleUpToDate(ElemStyles elemStyles) {
         throw new UnsupportedOperationException();
     }
+    default void clearCachedStyle(){
+        //do nothing
+    };
 
     @Override
     default Map<String, String> getKeys() {
