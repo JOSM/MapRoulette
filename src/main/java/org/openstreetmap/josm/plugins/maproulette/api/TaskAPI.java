@@ -21,6 +21,7 @@ import org.openstreetmap.josm.plugins.maproulette.api.parsers.TaskParser;
 import org.openstreetmap.josm.plugins.maproulette.util.HttpClientUtils;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.bugreport.BugReport;
 
 /**
  * Task API
@@ -92,6 +93,9 @@ public final class TaskAPI {
                 query);
         try (var inputstream = client.connect().getContent()) {
             return (ClusteredPoint[]) ClusteredPointParser.parse(inputstream);
+        } catch (Exception e) {
+            BugReport.intercept(e).put("uri", client.getURL().toExternalForm()).warn();
+            return new ClusteredPoint[0];
         } finally {
             client.disconnect();
         }

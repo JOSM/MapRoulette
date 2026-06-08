@@ -9,13 +9,16 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.Objects;
 
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.Difficulty;
 import org.openstreetmap.josm.plugins.maproulette.api.enums.TaskStatus;
 import org.openstreetmap.josm.plugins.maproulette.api.model.ClusteredPoint;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
 
 import jakarta.annotation.Nullable;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonParser;
 
@@ -66,7 +69,7 @@ public final class ClusteredPointParser {
                     object.getString("ownerName"), object.getString("title"),
                     object.getJsonNumber("parentId").longValue(), object.getString("parentName"),
                     Objects.requireNonNull(PointParser.parse(object.getJsonObject("point"))),
-                    object.getString("bounding"), object.getString("blurb"),
+                    parseBounding(object.get("bounding")), object.getString("blurb"),
                     Instant.parse(object.getString("modified")),
                     object.containsKey("difficulty") && object.getInt("difficulty") > 0
                             ? Difficulty.values()[object.getInt("difficulty") - 1]
@@ -80,5 +83,19 @@ public final class ClusteredPointParser {
                     optionalLong(object, "bundleId"), object.getBoolean("isBundlePrimary", false));
         }
         return null;
+    }
+
+    @Nullable
+    private static Object parseBounding(JsonValue bounding) {
+        if (bounding instanceof JsonString str) {
+            return str.getString();
+        } else if (bounding instanceof JsonObject obj) {
+            try {
+                return GeometryParser.parseValue(obj);
+            } catch (IllegalDataException ide) {
+                throw new JosmRuntimeException(bounding.toString(), ide);
+            }
+        }
+        throw new IllegalArgumentException(bounding.toString());
     }
 }

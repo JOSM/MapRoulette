@@ -39,7 +39,7 @@ import jakarta.annotation.Nullable;
  * @param isBundlePrimary    If the bundle is the primary bundle
  */
 public record ClusteredPoint(long id, long owner, @Nonnull String ownerName, String title, long parentId, @Nonnull String parentName,
-                             @Nonnull Point location, @Nonnull String bounding, @Nonnull String blurb, @Nonnull Instant modified,
+                             @Nonnull Point location, @Nonnull Object bounding, @Nonnull String blurb, @Nonnull Instant modified,
                              @Nullable Difficulty difficulty, int type, @Nullable TaskStatus status, @Nullable String cooperativeWork,
                              @Nullable Instant mappedOn, @Nullable Long completedTimeSpent, @Nullable BaseUser completedBy,
                              PointReview pointReview, int priority, @Nullable Long bundleId, @Nullable Boolean isBundlePrimary)

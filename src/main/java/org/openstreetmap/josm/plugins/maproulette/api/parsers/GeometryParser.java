@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
@@ -38,19 +39,29 @@ final class GeometryParser {
     static DataSet parse(String input) throws IllegalDataException {
         try (var reader = Json.createReader(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)))) {
             final var value = reader.readValue();
-            final var ds = new DataSet();
-            if (value instanceof JsonObject object) {
-                parseObject(ds, object);
-            } else if (value instanceof JsonArray array) {
-                parseArray(ds, array);
-            }
-            final var dsBox = new BBox();
-            ds.allPrimitives().stream().map(IPrimitive::getBBox).forEach(dsBox::add);
-            final var bounds = new Bounds(dsBox.getBottomRight());
-            bounds.extend(dsBox.getTopLeft());
-            ds.addDataSource(new DataSource(bounds, null));
-            return ds;
+            return parseValue(value);
         }
+    }
+
+    /**
+     * Parse an input value
+     * @param value The value to parse
+     * @return The dataset
+     * @throws IllegalDataException if something is wrong with the input data
+     */
+    static DataSet parseValue(JsonValue value) throws IllegalDataException {
+        final var ds = new DataSet();
+        if (value instanceof JsonObject object) {
+            parseObject(ds, object);
+        } else if (value instanceof JsonArray array) {
+            parseArray(ds, array);
+        }
+        final var dsBox = new BBox();
+        ds.allPrimitives().stream().map(IPrimitive::getBBox).forEach(dsBox::add);
+        final var bounds = new Bounds(dsBox.getBottomRight());
+        bounds.extend(dsBox.getTopLeft());
+        ds.addDataSource(new DataSource(bounds, null));
+        return ds;
     }
 
     /**
