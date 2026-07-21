@@ -90,6 +90,9 @@ public final class ClusteredPointParser {
         if (bounding instanceof JsonString str) {
             return str.getString();
         } else if (bounding instanceof JsonObject obj) {
+            if (obj.isEmpty()) {
+                return null;
+            }
             try {
                 return GeometryParser.parseValue(obj);
             } catch (IllegalDataException ide) {
