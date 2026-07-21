@@ -18,7 +18,7 @@ by the task, you will be asked if you have fixed the problem _even if you haven'
 locked the task_ when you upload the changed primitive.
 
 # Author
-* Taylor Smock <tsmock@meta.com>
+* Taylor Smock <tsmock@protonmail.com>
 
 # License
 GPLv3 or any later version
