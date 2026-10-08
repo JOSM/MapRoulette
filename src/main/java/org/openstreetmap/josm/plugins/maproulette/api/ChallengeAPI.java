@@ -318,8 +318,9 @@ public final class ChallengeAPI {
         return new ChallengePriority(
                 object.containsKey("defaultPriority") ? Priority.values()[object.getInt("defaultPriority")]
                         : Priority.MEDIUM,
-                object.get("highPriorityRule").toString(), object.get("mediumPriorityRule").toString(),
-                object.get("lowPriorityRule").toString());
+                object.containsKey("highPriorityRule") ? object.get("highPriorityRule").toString() : null,
+                object.containsKey("mediumPriorityRule") ? object.get("mediumPriorityRule").toString() : null,
+                object.containsKey("lowPriorityRule") ? object.get("lowPriorityRule").toString() : null);
     }
 
     /**

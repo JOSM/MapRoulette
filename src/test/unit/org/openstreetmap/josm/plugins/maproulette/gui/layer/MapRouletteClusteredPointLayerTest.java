@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeoutException;
 import javax.swing.JComponent;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -131,6 +134,42 @@ class MapRouletteClusteredPointLayerTest {
             sync();
             assertDoesNotThrow(() -> layer.mouseClicked(generateMouseEvent(false, 36.0778797, -119.1075725)));
             assertEquals(0, panel.getSelected().size());
+        } finally {
+            MainApplication.getMap().removeToggleDialog(panel);
+        }
+    }
+
+    /**
+     * Non-regression test for <a href="https://josm.openstreetmap.de/ticket/24760">#24760</a>
+     * @param box The box to test
+     */
+    @ParameterizedTest
+    @ValueSource(strings={"121.0923654/14.57171/121.1008573/14.5774521"})
+    void testNonRegression24760(String box) throws ExecutionException, InterruptedException, TimeoutException {
+        MainApplication.getLayerManager().addLayer(new OsmDataLayer(new DataSet(), "testShiftSelection", null));
+        double[] boxDouble = Arrays.stream(box.split("/", 4)).mapToDouble(Double::parseDouble).toArray();
+        final var bounds = new Bounds(boxDouble[1], boxDouble[0], boxDouble[3], boxDouble[2]);
+        new MockUp<MapViewState.MapViewRectangle>() {
+            @Mock
+            public Bounds getLatLonBoundsBox() {
+                return bounds;
+            }
+        };
+        final var panel = new TaskListPanel();
+        try {
+            MainApplication.getMap().addToggleDialog(panel);
+            TaskListPanelTest.getDownloadAction(panel).actionPerformed(null);
+            sync();
+            final var layers = MainApplication.getLayerManager().getLayersOfType(MapRouletteClusteredPointLayer.class);
+            assertEquals(1, layers.size());
+            final var layer = layers.get(0);
+            assertTrue(panel.getSelected().isEmpty());
+            // Check and make certain that "simple" click events work properly
+            final var task = layer.getTasks().iterator().next();
+            layer.mouseClicked(generateMouseEvent(false, task.location().lat(), task.location().lon()));
+            sync();
+            assertEquals(1, panel.getSelected().size());
+            assertEquals(task.id(), panel.getSelected().iterator().next().id());
         } finally {
             MainApplication.getMap().removeToggleDialog(panel);
         }
